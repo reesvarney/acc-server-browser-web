@@ -1,0 +1,34 @@
+#####################################################
+a4 25 a4 25 03
+06 02 
+[CLASS]
+0a f2 dc fe 7e 14 dc d9 08 00 
+[HOTJOIN]
+ff
+[NUM OF SESSIONS] 
+[SESSION TYPE] [SESSION TIME 1x] [SESSION TIME 256x]
+[SESSION TYPE] [SESSION TIME 1x] [SESSION TIME 256x]
+[MAX DRIVERS] 
+[DRIVERS CONNECTED] 
+00 00 00 
+[RAIN]
+00 
+[NIGHT]
+[WEATHER VARIABILITY]
+[TRACK MEDALS]
+[SA]
+ff ff 00 6a f0 24 3f 00
+[ACTIVE SESSION]
+####################################################
+
+Notes:
+SA - FF For 0 SA
+Session time - first pair is standard minutes, second pair is x256 minutes
+SESSION TYPES:
+00 practice
+04 quali
+0a race
+
+
+NEED TO FIND:
+ - current session time

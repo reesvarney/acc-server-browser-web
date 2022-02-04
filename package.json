@@ -1,0 +1,16 @@
+{
+  "name": "acc-server-browser-web",
+  "version": "1.0.0",
+  "description": "A web based server browser for ACC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "RV",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "ws": "^8.4.2"
+  }
+}
