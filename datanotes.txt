@@ -32,3 +32,4 @@ SESSION TYPES:
 
 NEED TO FIND:
  - current session time
+ - password required

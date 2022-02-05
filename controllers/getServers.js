@@ -27,7 +27,7 @@ const rain = {
 
 let JSONdata = [];
 
-function getServers(){
+function getServers({server}){
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
     protocolVersion: 13,
     'Pragma': 'no-cache',
@@ -49,7 +49,7 @@ function getServers(){
     cleanData(hexString);
   })
   
-  function cleanData(data){
+  async function cleanData(data){
     let clone = data.slice(200).split('');
   
     function getDynamic(){
@@ -129,6 +129,8 @@ function getServers(){
   
     // TODO: Properly detect the last server, for now this should work though
     JSONdata.pop();
+    await server.deleteMany({});
+    server.insertMany(JSONdata, {ordered: true});
   }
 }
-export {getServers, JSONdata as servers}
+export default getServers;
