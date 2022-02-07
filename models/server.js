@@ -4,7 +4,8 @@ const schema = new mongoose.Schema({
   misc: [String],
   track: {
     name: String,
-    id: String
+    id: String,
+    dlc: String
   },
   name: String,
   class: String,

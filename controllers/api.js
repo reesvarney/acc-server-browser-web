@@ -28,7 +28,12 @@ export default ({server})=>{
         }
         queryData.class.push(split[1]);
       } else if(key.startsWith("dlc_")){
-        
+        if(queryData["track.dlc"] == undefined){
+          queryData["track.dlc"] = [];
+        };
+        console.log(split[1])
+        queryData["track.dlc"].push(split[1]);
+
       } else if(key.startsWith("session_")){
         if(queryData.sessions == undefined){
           queryData.sessions = { 

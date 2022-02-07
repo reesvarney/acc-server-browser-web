@@ -41,25 +41,30 @@ const trackData = {
     name: "Barcelona Grand Prix Circuit"
   },
   "mount_panorama": {
-    name: "Bathurst - Mount Panorama Circuit"
+    name: "Bathurst - Mount Panorama Circuit",
+    dlc: "icgt"
   },
   "brands_hatch": {
     name: "Brands Hatch"
   },
   "donington": {
-    name: "Donington Park"
+    name: "Donington Park",
+    dlc: "bgt"
   },
   "hungaroring": {
     name: "Hungaroring"
   },
   "imola": {
-    name: "Imola"
+    name: "Imola",
+    dlc: "gtwc"
   },
   "kyalami": {
-    name: "Kyalami"
+    name: "Kyalami",
+    dlc: "icgt"
   },
   "laguna_seca": {
-    name: "Laguna Seca"
+    name: "Laguna Seca",
+    dlc: "icgt"
   },
   "misano": {
     name: "Misano"
@@ -71,7 +76,8 @@ const trackData = {
     name: "Nurburgring"
   },
   "oulton_park": {
-    name: "Oulton Park"
+    name: "Oulton Park",
+    dlc: "bgt"
   },
   "paul_ricard": {
     name: "Paul Ricard"
@@ -80,13 +86,15 @@ const trackData = {
     name: "Silverstone"
   },
   "snetterton" : {
-    name: "Snetterton 300"
+    name: "Snetterton 300",
+    dlc: "bgt"
   },
   "spa": {
     name: "Spa-Francorchamps"
   },
   "suzuka": {
-    name: "Suzuka"
+    name: "Suzuka",
+    dlc: "icgt"
   },
   "zandvoort": {
     name: "Zandvoort"
@@ -99,10 +107,15 @@ const trackData = {
 function getTrack(id){
   // todo: match legacy naming to current spec, see: https://www.acc-wiki.info/wiki/Racetracks_Overview
   if(id in trackData){
-    return trackData[id];
+    const track = trackData[id];
+    if(track.dlc == undefined){
+      track.dlc = "base"
+    };
+    return track;
   }
   return {
-    name: id
+    name: id,
+    dlc: "base"
   }
 }
 
