@@ -51,7 +51,11 @@ const server = app.listen(port, ()=>{
 
 import childProcess from "child_process";
 function getServers(){
-  childProcess.spawn("node", ["./getServers.js"], {env: process.env});
+  const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
+
+  child.stdout.on('data',function (data) {
+    console.log(data);
+  });
 }
 (async()=>{
   getServers()
