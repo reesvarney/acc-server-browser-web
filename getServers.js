@@ -235,3 +235,6 @@ function getServers(){
 }
 
 getServers()
+const getServerLoop = setInterval(async()=>{
+  getServers();
+}, 2 * 60 * 1000);
