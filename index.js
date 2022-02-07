@@ -3,7 +3,11 @@ const port = process.env.PORT || 80;
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
-await mongoose.connect('mongodb://localhost:27017/');
+if(process.env.LOCALDB = true){
+  await mongoose.connect(`mongodb://localhost:27017/'`);
+} else {
+  await mongoose.connect(`mongodb://${process.env.DB_USER}:${DB_PASS}@${DB_ADDRESS}:${DB_PORT}/'`);
+}
 
 import serverSchema from "./models/server.js";
 const models = {
