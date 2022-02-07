@@ -25,6 +25,77 @@ const rain = {
   "00" : false
 }
 
+// todo: add dlc requirements etc so it can be filtered
+const trackData = {
+  "barcelona": {
+    name: "Barcelona Grand Prix Circuit"
+  },
+  "mount_panorama": {
+    name: "Bathurst - Mount Panorama Circuit"
+  },
+  "brands_hatch": {
+    name: "Brands Hatch"
+  },
+  "donington": {
+    name: "Donington Park"
+  },
+  "hungaroring": {
+    name: "Hungaroring"
+  },
+  "imola": {
+    name: "Imola"
+  },
+  "kyalami": {
+    name: "Kyalami"
+  },
+  "laguna_seca": {
+    name: "Laguna Seca"
+  },
+  "misano": {
+    name: "Misano"
+  },
+  "monza": {
+    name: "Monza"
+  },
+  "nurburgring": {
+    name: "Nurburgring"
+  },
+  "oulton_park": {
+    name: "Oulton Park"
+  },
+  "paul_ricard": {
+    name: "Paul Ricard"
+  },
+  "silverstone": {
+    name: "Silverstone"
+  },
+  "snetterton" : {
+    name: "Snetterton 300"
+  },
+  "spa": {
+    name: "Spa-Francorchamps"
+  },
+  "suzuka": {
+    name: "Suzuka"
+  },
+  "zandvoort": {
+    name: "Zandvoort"
+  },
+  "zolder": {
+    name: "Zolder"
+  }
+};
+
+function getTrack(id){
+  // todo: match legacy naming to current spec, see: https://www.acc-wiki.info/wiki/Racetracks_Overview
+  if(id in trackData){
+    return trackData[id];
+  }
+  return {
+    name: id
+  }
+}
+
 let JSONdata = [];
 
 function getServers({server}){
@@ -78,10 +149,12 @@ function getServers({server}){
         const time1 = parseInt(clone.splice(0, 2).join(""), 16);
         const time2 = (parseInt(clone.splice(0, 2).join(""), 16) * 256);
         sessionData["time"] = time1 + time2;
+        sessionData["active"] = false;
         record.sessions.push(sessionData);
       }
       record.maxDrivers = parseInt(clone.splice(0, 2).join(""), 16);
       record.connectedDrivers = parseInt(clone.splice(0, 2).join(""), 16);
+      record.isFull = (record.maxDrivers == record.connectedDrivers);
       record.misc.push(clone.splice(0, 6).join(""));
       record.conditions = {};
       record.conditions.rain = rain[(clone.splice(0, 2).join(""))];
@@ -102,6 +175,9 @@ function getServers({server}){
       record.misc.push(clone.splice(0, 16).join(""));
   
       record.currentSession = parseInt(clone.splice(0, 2).join(""), 16);
+      if(record.currentSession < record.sessions.length){
+        record.sessions[record.currentSession].active = true;
+      }
   
       return record
     }
@@ -119,7 +195,9 @@ function getServers({server}){
       record.misc = [];
       record.misc.push(getMetaSmall(5).join(""));
       // track
-      record.track = getDynamic();
+      const trackId = getDynamic();
+      record.track = getTrack(trackId);
+      record.track.id = trackId;
       // server name
       record.name = getDynamic();
       // record
@@ -130,7 +208,8 @@ function getServers({server}){
     // TODO: Properly detect the last server, for now this should work though
     JSONdata.pop();
     await server.deleteMany({});
-    server.insertMany(JSONdata, {ordered: true});
+    const pushed = await server.insertMany(JSONdata, {ordered: true});
+    console.log(pushed[0].toJSON())
   }
 }
 export default getServers;

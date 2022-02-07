@@ -1,0 +1,265 @@
+body{
+  padding: 0px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  box-sizing: content-box;
+  margin: 0px;
+}
+
+.background{
+  position: fixed;
+  min-width: 110vw;
+  min-height: 110vh;
+  top: -5vh;
+  left: -5vw;
+  filter: blur(3px);
+  filter: brightness(50%);
+  z-index: -1;
+}
+
+button {
+  background-color: rgb(160, 0, 0);
+  box-shadow: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: rgb(120, 0, 0);
+}
+
+button:active{
+  background-color: rgb(83, 0, 0);
+}
+
+/* BANNER */
+.banner {
+  background-color: rgb(17, 17, 17);
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#refresh_button {
+  font-size: 1.1em;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+/* FILTERS */
+#filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0px;
+  background-color: rgba(49, 49, 49, 0.8);
+  padding: 15px;
+}
+
+#filters>* {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.filter-group{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-self: flex-start;
+}
+
+.filter-search{
+  flex-grow: 1;
+  display: flex;
+}
+
+.filter-search input {
+  width: auto;
+  max-width: auto;
+  flex-grow: 1;
+  background-color: #1b1b1b;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  padding: 5px;
+  border: 3px solid #fff0;
+}
+
+.filter-search input:focus{
+  outline: none;
+  border-color: #ffff;
+}
+
+.filters-main {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+.update-button-area{
+  margin-left: auto;
+  justify-self: flex-end;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+#update_button{
+  padding: 5px 10px;
+  font-size: 1.1em;
+}
+
+/* SERVERS */
+#servers{
+  box-sizing: content-box;
+  padding: 0px;
+  margin: 0px;
+  display: block;
+  overflow-y: scroll;
+  max-height: 100%;
+  width: 100%;
+}
+
+#servers>tbody{
+  display: table;
+  width: 100%;
+  border-spacing: 0px 2px;
+}
+
+#servers:last-child{
+  margin-bottom: 200px;
+}
+
+/* SERVER */
+.server {
+  background-color: rgba(0,0,0,0.8);
+  padding: 20px;
+  list-style-type: none;
+}
+
+.server>*{
+  vertical-align: middle;
+  border: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.server-name {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.server:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.server-ip{
+  margin-right: 20px;
+}
+
+/* CONDITIONS */
+.conditions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 2em;
+}
+.conditions-icon {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.conditions-variability {
+  box-sizing: content-box;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  transform: rotate(270deg);
+  width: 60px;
+  height: 20px;
+  overflow: hidden;
+  background-color: rgba(0,0,0,0.1);
+}
+.conditions-variability::-webkit-progress-bar {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.conditions-variability::-webkit-progress-value {
+  background-color: rgb(255, 198, 42);
+}
+
+.server-class {
+  padding: 3px 7px;
+  margin-top: 5px;
+  justify-self: flex-start;
+  min-width: 0px;
+  width: fit-content;
+  font-weight: 600;
+}
+
+.server-class.gt3{
+  background-color: #1b1b1b;
+  color: white;
+}
+
+.server-class.gt4{
+  color: white;
+  background-color: rgb(33, 40, 105);
+}
+
+.server-class.gtc{
+  color: white;
+  background-color: rgb(255, 136, 0);
+}
+
+.server-class.mixed{
+  background-color: white;
+  color: black;
+}
+
+/* SESSION */
+.sessions{
+  margin-right: 20px;
+}
+
+.session{
+  display: inline-block;
+  background-color: #494949;
+  color: rgb(255, 255, 255);
+  padding: 5px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.session.active{
+  background-color: #fafafa;
+  color: black
+}
+
+/* UTILITIES */
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.grey-text {
+  color: #aaa;
+}

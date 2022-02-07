@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
-export default new mongoose.Schema({
+const schema = new mongoose.Schema({
   ip: String,
   misc: [String],
-  track: String,
+  track: {
+    name: String,
+    id: String
+  },
   name: String,
   class: String,
   hotjoin: Boolean,
@@ -10,7 +13,8 @@ export default new mongoose.Schema({
   sessions: [
     {
       type: {type: String},
-      time: Number
+      time: Number,
+      active: Boolean
     }
   ],
   maxDrivers: Number,
@@ -24,5 +28,12 @@ export default new mongoose.Schema({
     trackMedals: Number,
     safetyRating: Number
   },
-  currentSession: Number
+  currentSession: Number,
+  isFull: Boolean
+},{
+  collation: {
+    locale : "en",
+    strength : 1
+  }
 });
+export default schema;

@@ -1,0 +1,199 @@
+<head>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/css/solid.min.css">
+  <script src="/js/main.js" type="module"></script>
+</head>
+<body>
+  <div class="banner">
+    <h1 class="site-title">
+      ACC Community Server Browser Project
+    </h1>
+    <button id="refresh_button">
+      <i class="fas fa-redo-alt"></i>
+    </button>
+  </div>
+  <img class="background" src="/img/bg.jpg">
+  <form id="filters">
+
+
+    <div class="filter-search">
+      <input name="search" type="text" placeholder="Search by Name">
+    </div>
+    <!-- <div class="filter-sort">
+      Sort By:
+      <select name="sort">
+        <option value="drivers" selected>Connected Drivers</option>
+      </select>
+    </div> -->
+    <div class="filters-main">
+
+      <div class="filter-group">
+        <span class="filter-group-name">SA</span>
+        <div class="filter">
+          Min
+          <input name="min_sa" type="number" min="0" max="99" value="0">
+        </div>
+        <div class="filter">
+          Max
+          <input name="max_sa" type="number" min="0" max="99" value="99">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-name">Track Medals</span>
+        <div class="filter">
+          Min
+          <input name="min_tm" type="number" min="0" max="3" value="0">
+        </div>
+        <div class="filter">
+          Max
+          <input name="max_tm" type="number" min="0" max="3" value="3">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter">
+          Show Empty
+          <input name="show_empty" type="checkbox">
+        </div>
+        <div class="filter">
+          Show Full
+          <input name="show_full" type="checkbox" checked>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-name">DLC</span>
+        <div class="filter">
+          ICGT
+          <input name="dlc_icgt" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          GTWC
+          <input name="dlc_gtwc" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          BGT
+          <input name="dlc_bgt" type="checkbox" checked>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-name">Class</span>
+        <div class="filter">
+          Mixed
+          <input name="class_mixed" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          GT3
+          <input name="class_gt3" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          GT4
+          <input name="class_gt4" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          GTC
+          <input name="class_gtc" type="checkbox" checked>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-name">Current Session</span>
+        <div class="filter">
+          Practice
+          <input name="session_practice" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          Qualifying
+          <input name="session_qualifying" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          Race
+          <input name="session_race" type="checkbox" checked>
+        </div>
+      </div>
+      <div class="update-button-area">
+        <button type="submit" id="update_button">Update</button>
+      </div>
+    </div>
+  </form>
+  <table id="servers">
+  </table>
+</body>
+
+<template id="server-template">
+  <tr class="server">
+    <td class="server-ip">
+      {{ ip }}
+    </td>
+
+
+    <td class="flex-col">
+      <div class="server-name">
+        {{ name }}
+      </div>
+
+      <div class="flex-col">
+        <div class="sessions">
+          {{#each sessions}}
+          <div class="session {{#if this.active}}active{{/if}}">
+            {{this.type}}: {{this.time}}'
+          </div>
+          {{/each}}
+        </div>
+
+        <div class="requirements">
+          <span class="grey-text">
+            REQUIREMENTS: 
+          </span>
+          <span class="requirements-track-medals">
+            Track Medals: {{requirements.trackMedals}}
+          </span>
+          <span class="requirements-sa">
+            SA: {{requirements.safetyRating}}
+          </span>
+        </div>
+      </div>
+    </td>
+
+
+    <td>
+      <div class="conditions">
+        <div class="conditions-icon">
+          {{#if conditions.rain }}
+          {{#if conditions.night }}
+            <i class="fas fa-cloud-moon-rain"></i>
+          {{else}}
+            <i class="fas fa-cloud-showers-heavy"></i>
+          {{/if }}
+        {{else}}
+          {{#if conditions.night }}
+            <i class="fas fa-moon"></i>
+          {{/if }}
+        {{/if }}
+        </div>
+        <progress class="conditions-variability" min="0" max="80" value="{{conditions.variability}}" ></progress>
+  
+      </div>
+    </td>
+
+    <td class="server-track">
+      <div class="server-track-name">
+        {{ track.name }}
+      </div>
+      <div class="server-class {{class}}">
+        {{class}}
+      </div>
+      <!-- <img src="/img/tracks/{{track.id}}.jpg" class="track-image"> -->
+    </td>
+
+
+    <td class="drivers">
+      <span class="grey-text">Drivers </span>{{connectedDrivers}}/{{maxDrivers}}
+    </td>
+
+
+  </tr>
+</template>
