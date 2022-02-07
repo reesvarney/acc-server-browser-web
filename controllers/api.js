@@ -31,7 +31,6 @@ export default ({server})=>{
         if(queryData["track.dlc"] == undefined){
           queryData["track.dlc"] = [];
         };
-        console.log(split[1])
         queryData["track.dlc"].push(split[1]);
 
       } else if(key.startsWith("session_")){
