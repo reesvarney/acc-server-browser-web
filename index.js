@@ -3,9 +3,8 @@ const port = process.env.PORT || 80;
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
-if(process.env.LOCALDB == "true"){
-  await mongoose.connect(process.env.DB_URL);
-}
+console.log("connecting to db: " + process.env.DB_URL)
+await mongoose.connect(process.env.DB_URL);
 
 console.log("Connecting to DB")
 import serverSchema from "./models/server.js";

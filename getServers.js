@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import fs from "fs/promises";
-console.log("Started child script")
 await mongoose.connect(process.env.DB_URL);
 
 import serverSchema from "./models/server.js";
