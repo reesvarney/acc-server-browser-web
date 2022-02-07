@@ -54,7 +54,7 @@ function getServers(){
   const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
 
   child.stdout.on('data',function (data) {
-    console.log(data);
+    console.log(data.toString());
   });
 }
 (async()=>{
