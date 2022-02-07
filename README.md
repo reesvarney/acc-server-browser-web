@@ -7,8 +7,7 @@ Using captured websocket messages, the server "replays" them in order to get a l
 Currently the app updates its server data every 2 minutes to avoid potentially being rate-limited or blocked by the kunos servers. This should be frequent enough to provide roughly accurate data but you can change the value in `./getServers.js` if you need.
 ## Setup
 ### Obtaining request strings
-To obtain the request strings it is a fairly involved process. I would not recommend sharing your individual request strings with other people as they may contain sensitive authentication data in relation to your Steam account.
-
+To obtain the request strings it is a fairly involved process. I would not recommend sharing your individual request strings with other people as they may contain sensitive authentication data in relation to your Steam account. Also, the server's that appear will depend on what DLC is associated with the steam account you use to get the request strings so it is ideal to have the British GT and Intercontinental GT packs installed (this doesn't seem to apply to Imola so the 2020 GTWC pack shouldn't be necessary).
 1. Install wireshark https://www.wireshark.org/ (Other programs may work but this is what I have used)
 2. Open wireshark and select your main network adapter, the graphs for activity next to the options should give a clue as to which it is
 3. Set the filter to only be requests to Kunos's ACC server ip and press Enter to apply it.
