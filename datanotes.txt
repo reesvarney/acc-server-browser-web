@@ -1,34 +1,33 @@
 #####################################################
-a4 25 a4 25 03
-06 02 
+{IP Address}
+[TCP PORT * 1] [TCP PORT * 256]
+[UDP PORT * 1] [UDP PORT * 256]
+XX
+{TRACK NAME}
+{SERVER NAME}
+XX XX 
 [CLASS]
-0a f2 dc fe 7e 14 dc d9 08 00 
+XX XX XX XX XX XX XX XX XX XX 
 [HOTJOIN]
-ff
+XX
 [NUM OF SESSIONS] 
 [SESSION TYPE] [SESSION TIME 1x] [SESSION TIME 256x]
 [SESSION TYPE] [SESSION TIME 1x] [SESSION TIME 256x]
 [MAX DRIVERS] 
 [DRIVERS CONNECTED] 
-00 00 00 
+XX XX XX 
 [RAIN]
-00 
+XX 
 [NIGHT]
 [WEATHER VARIABILITY]
 [TRACK MEDALS]
 [SA]
-ff ff 00 6a f0 24 3f 00
+XX XX XX XX XX XX XX XX
 [ACTIVE SESSION]
 ####################################################
 
-Notes:
-SA - FF For 0 SA
-Session time - first pair is standard minutes, second pair is x256 minutes
-SESSION TYPES:
-00 practice
-04 quali
-0a race
-
+{} = Dynamic length (Determined length by preceeding hex pair)
+[] = Single hex pair
 
 NEED TO FIND:
  - current session time

@@ -1,0 +1,45 @@
+# ACC Community Server Browser Project
+View Assetto Corsa Competizione servers without opening the game.
+
+## How it works
+Using captured websocket messages, the server "replays" them in order to get a list of servers from Kunos directly. The response from Kunos' server is in a (what seems to be) propriety format which I've been able to extract some of the data from however a large chunk of it is still unknown (see datanotes.txt for more information). The data is converted into JSON which is then stored in a database and served to the html client.
+
+Currently the app updates its server data every 2 minutes to avoid potentially being rate-limited or blocked by the kunos servers. This should be frequent enough to provide roughly accurate data but you can change the value in `./getServers.js` if you need.
+## Setup
+### Obtaining request strings
+To obtain the request strings it is a fairly involved process. I would not recommend sharing your individual request strings with other people as they may contain sensitive authentication data in relation to your Steam account.
+
+1. Install wireshark https://www.wireshark.org/ (Other programs may work but this is what I have used)
+2. Open wireshark and select your main network adapter, the graphs for activity next to the options should give a clue as to which it is
+3. Set the filter to only be requests to Kunos's ACC server ip and press Enter to apply it.
+``` 
+ip.dst == 144.76.81.131
+```
+4. Start ACC, go to the server list and then close the game.
+
+5. The "auth string" is fairly easy to identify, it should be in a `WebSocket Text [FIN] [MASKED]` request after the HTTP `GET /kson809/` and the data will start with hex values separated by vertical lines. Select it and right click the "Data" section and copy it as printable text.
+
+6. The "query string" can be found in a `WebSocket Binary [FIN] [MASKED]` request. It will contain some IP addresses in the ASCII preview below, however there are a few like this and the one that you need specifically will be different as when you select it, the whole preview will be highlighted as data. For this, right click on the data and copy it as a hex stream.
+
+### Deployment
+1. Install MongoDB
+There are multiple ways to do this, I recommend using the docker image with docker desktop. You could also use MongoDB Atlas for free cloud hosting.
+2. Install nodejs/ npm
+3. Install the dependencies
+```
+npm install
+```
+4. Set up the env. This can either be done by setting the environment variables directly or by creating a .env file in the server's root folder.
+```
+DB_URL="mongodb://<The URL of your mongoDB database, including any needed authentication. This will most likely be "localhost:27017" if you are running it locally>"
+QUERYSTRING="<The query request string you got earlier>"
+AUTHSTRING="<The auth request string you got earlier>"
+```
+5. Run the server
+```
+npm start
+```
+
+You can also easily use Heroku or CapRover to deploy it by using the repository as a source for your app. You will still need to set up a MongoDB server (in CapRover you can use the MongoDB one click app).
+
+Note: In heroku the dyno will not automatically go into sleep as the requests for server data count as network activity.
