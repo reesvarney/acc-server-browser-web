@@ -99,6 +99,8 @@ function getTrack(id){
 let JSONdata = [];
 
 function getServers({server}){
+  console.log("Getting server list...");
+
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
     protocolVersion: 13,
     'Pragma': 'no-cache',
@@ -209,7 +211,7 @@ function getServers({server}){
     JSONdata.pop();
     await server.deleteMany({});
     const pushed = await server.insertMany(JSONdata, {ordered: true});
-    console.log(pushed[0].toJSON())
+    console.log("Got server list!");
   }
 }
 export default getServers;
