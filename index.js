@@ -50,7 +50,7 @@ const server = app.listen(port, ()=>{
 });
 
 import getServers from "./controllers/getServers.js";
-async()=>{getServers(models)};
+(async()=>{getServers(models)})();
 const getServerLoop = setInterval(async()=>{
   getServers(models)
 }, 2 * 60 * 1000);
