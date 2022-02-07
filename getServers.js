@@ -247,7 +247,7 @@ function getServers(){
     await server.deleteMany({});
     const pushed = await server.insertMany(JSONdata, {ordered: true});
     console.log("Got server list!");
-    fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
+    // fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
   }
 }
 

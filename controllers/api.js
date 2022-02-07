@@ -20,7 +20,6 @@ export default ({server})=>{
 
     if ("favourites" in req.query) {
       const favourites = req.query.favourites.split(",").map(a=>a.split(":"));
-      console.log(req.query.favourites)
       queryData.ip = favourites.map(a=>a[0]);
       queryData["port.tcp"] = favourites.map(a=>a[1]);
     }
