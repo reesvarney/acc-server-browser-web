@@ -4,7 +4,7 @@ import express from "express";
 import path from "path";
 import mongoose from "mongoose";
 if(process.env.LOCALDB == "true"){
-  await mongoose.connect(process.env.DB_URL, {userMongoClient: true});
+  await mongoose.connect(process.env.DB_URL);
 }
 
 console.log("Connecting to DB")
