@@ -7,13 +7,14 @@ if(process.env.LOCALDB == "true"){
   await mongoose.connect(process.env.DB_URL, {userMongoClient: true});
 }
 
+console.log("Connecting to DB")
 import serverSchema from "./models/server.js";
 const models = {
   server: mongoose.model("Server", serverSchema)
 };
 
+console.log("Creating Compiler")
 import webpack from 'webpack';
-
 const compiler = webpack({
   entry: "./client/src/main.js",
   output: {
@@ -32,6 +33,8 @@ compiler.watch({
 }, (err, stats) => {
   if(stats.hasErrors()) console.log(stats.compilation.errors);
 });
+
+console.log("Initialising controllers");
 
 const app = express();
 app.use(express.static("./client"));

@@ -156,6 +156,7 @@ function getServers(){
   })
 
   async function cleanData(data){
+    console.log("Cleaning data")
     let clone = data.slice(200).split('');
   
     function getDynamic(){
