@@ -49,8 +49,13 @@ const server = app.listen(port, ()=>{
   console.log(`Listening on port: ${server.address().port}`)
 });
 
-import getServers from "./controllers/getServers.js";
-(async()=>{getServers(models)})();
+import childProcess from "child_process";
+function getServers(){
+  childProcess.spawn("node", ["./getServers.js"], {env: process.env});
+}
+(async()=>{
+  getServers()
+})();
 const getServerLoop = setInterval(async()=>{
-  getServers(models)
+  getServers();
 }, 2 * 60 * 1000);

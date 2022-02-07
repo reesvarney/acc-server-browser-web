@@ -1,3 +1,13 @@
+import mongoose from "mongoose";
+if(process.env.LOCALDB == "true"){
+  await mongoose.connect('mongodb://localhost:27017/');
+} else {
+  await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_ADDRESS}/${process.env.DB_NAME}?retryWrites=true&w=majority`);
+}
+
+import serverSchema from "./models/server.js";
+const server= mongoose.model("Server", serverSchema)
+
 import { randomBytes } from 'crypto';
 import WebSocket from 'ws';
 import "dotenv/config";
@@ -98,7 +108,7 @@ function getTrack(id){
 
 let JSONdata = [];
 
-function getServers({server}){
+function getServers(){
   console.log("Getting server list...");
 
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
@@ -223,4 +233,5 @@ function getServers({server}){
     console.log("Got server list!");
   }
 }
-export default getServers;
+
+getServers()
