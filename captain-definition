@@ -1,4 +1,13 @@
 {
 "schemaVersion": 2,
-"templateId": "node/16.13.2"
+"dockerfileLines": [
+  "FROM node/16.13.2",
+  "RUN mkdir -p /usr/src/app",
+  "WORKDIR /usr/src/app",
+  "COPY ./package.json /usr/src/app/",
+  "RUN npm install && npm cache clean --force",
+  "COPY ./ /usr/src/app",
+  "EXPOSE 80",
+  "CMD [ \"npm\", \"start\" ]"
+  ]
 }
