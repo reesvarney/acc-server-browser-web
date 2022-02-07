@@ -13,13 +13,22 @@ export default ({server})=>{
     if(req.query != {} && req.query.show_full == undefined){
       queryData.isFull = false;
     }
+
     if ("search" in req.query) {
       queryData.name =  { "$regex": req.query.search, "$options": "i" }
+    }
+
+    if ("favourites" in req.query) {
+      const favourites = req.query.favourites.split(",").map(a=>a.split(":"));
+      console.log(req.query.favourites)
+      queryData.ip = favourites.map(a=>a[0]);
+      queryData["port.tcp"] = favourites.map(a=>a[1]);
     }
 
     if(req.query.show_empty == undefined){
       queryData.connectedDrivers = {$ne: 0};
     }
+
     for(const [key, val] of Object.entries(req.query)){
       const split = key.split("_");
       if(key.startsWith("class_")){

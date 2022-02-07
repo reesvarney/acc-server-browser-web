@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import fs from "fs/promises";
 if(process.env.LOCALDB == "true"){
   await mongoose.connect('mongodb://localhost:27017/');
 } else {
@@ -215,11 +216,7 @@ function getServers(){
   
       return record
     }
-  
-    function getMetaSmall(){
-      return clone.splice(0,10);
-    }
-  
+
     JSONdata = [];
     while(clone.length > 3){
       let record = {};
@@ -230,7 +227,10 @@ function getServers(){
       }
       // unknown?
       record.misc = [];
-      record.misc.push(getMetaSmall(5).join(""));
+      record.port = {};
+      record.port.tcp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
+      record.port.udp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
+      record.misc.push(clone.splice(0, 2).join(""));
       // track
       const trackId = getDynamic();
       record.track = getTrack(trackId);
@@ -247,6 +247,7 @@ function getServers(){
     await server.deleteMany({});
     const pushed = await server.insertMany(JSONdata, {ordered: true});
     console.log("Got server list!");
+    fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
   }
 }
 

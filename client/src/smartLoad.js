@@ -1,4 +1,6 @@
 import Handlebars from "handlebars/dist/handlebars.js";
+import {getFavourites, setFavourites} from "./storage.js";
+
 export default class{
   constructor(elSelector, templateSelector, data){
     this.data = data;
@@ -54,6 +56,7 @@ export default class{
   addChild(){
     if(this.data.length > 0){
       const server = this.data.splice(0, 1)[0];
+      server.isFavourite = getFavourites().includes(`${server.ip}:${server.port.tcp}`);
       const div =  document.createElement("template");
       div.innerHTML =  this.template(server);
       this.childEl.appendChild(div.content.firstElementChild);

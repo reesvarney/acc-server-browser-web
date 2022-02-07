@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 const schema = new mongoose.Schema({
   ip: String,
+  port: {
+    tcp: Number,
+    udp: Number
+  },
   misc: [String],
   track: {
     name: String,

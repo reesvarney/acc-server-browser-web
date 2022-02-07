@@ -2,6 +2,7 @@
   <link rel="stylesheet" href="/css/app.css">
   <link rel="stylesheet" href="/css/fontawesome.min.css">
   <link rel="stylesheet" href="/css/solid.min.css">
+  <link rel="stylesheet" href="/css/regular.min.css">
   <script src="/js/main.js" type="module"></script>
 </head>
 <body>
@@ -60,6 +61,10 @@
         <div class="filter">
           Show Full
           <input name="show_full" type="checkbox" checked>
+        </div>
+        <div class="filter">
+          Favourites Only
+          <input name="favourites" id="filter_favourites" type="checkbox" value="">
         </div>
       </div>
 
@@ -129,6 +134,17 @@
 
 <template id="server-template">
   <tr class="server">
+    <td class="server-favourite" onclick="toggleFavourite(this, '{{ip}}:{{port.tcp}}')">
+      <div class="server-favourite-icon">
+        {{#if isFavourite }}
+        <i class="fas fa-star"></i>
+      {{else}}
+        <i class="far fa-star"></i>
+      {{/if}}
+      </div>
+
+    </td>
+
     <td class="server-ip">
       {{ ip }}
     </td>
