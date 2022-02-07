@@ -54,6 +54,9 @@ function getServers(){
   child.stdout.on('data',function (data) {
     console.log(data.toString());
   });
+  child.on('error',function (data) {
+    console.log(data.toString());
+  });
 }
 (async()=>{
   getServers()
