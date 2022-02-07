@@ -3,8 +3,8 @@ const port = process.env.PORT || 80;
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
-if(process.env.LOCALDB == true){
-  await mongoose.connect(`mongodb://localhost:27017/'`);
+if(process.env.LOCALDB == "true"){
+  await mongoose.connect('mongodb://localhost:27017/');
 } else {
   await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_ADDRESS}/${process.env.DB_NAME}?retryWrites=true&w=majority`);
 }

@@ -123,7 +123,14 @@ function getServers({server}){
     const hexString = data.toString('hex');
     cleanData(hexString);
   })
-  
+
+  ws.on("error", (err)=>{
+    console.log(err)
+  })
+  ws.on("unexpected-response", (err)=>{
+    console.log(err)
+  })
+
   async function cleanData(data){
     let clone = data.slice(200).split('');
   
