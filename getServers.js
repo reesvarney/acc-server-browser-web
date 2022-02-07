@@ -225,6 +225,9 @@ function getServers(){
       let record = {};
       // ip
       record.ip = getDynamic();
+      if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
+        continue;
+      }
       // unknown?
       record.misc = [];
       record.misc.push(getMetaSmall(5).join(""));
