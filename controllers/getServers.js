@@ -112,12 +112,14 @@ function getServers({server}){
   const queryString = process.env.QUERYSTRING;
   const authString = process.env.AUTHSTRING;
   ws.on("open", ()=>{
+    console.log("Established websocket connection");
     ws.send(authString);
     const hex = Buffer.from(queryString, "hex");
     ws.send(hex);
   })
   
   ws.on("message", (data)=>{
+    console.log("Got server hex data");
     const hexString = data.toString('hex');
     cleanData(hexString);
   })
