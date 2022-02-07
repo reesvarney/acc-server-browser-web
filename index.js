@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 if(process.env.LOCALDB = true){
   await mongoose.connect(`mongodb://localhost:27017/'`);
 } else {
-  await mongoose.connect(`mongodb://${process.env.DB_USER}:${DB_PASS}@${DB_ADDRESS}:${DB_PORT}/'`);
+  await mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_ADDRESS}:${process.env.DB_PORT}/${process.env.DB_NAME}'`);
 }
 
 import serverSchema from "./models/server.js";
