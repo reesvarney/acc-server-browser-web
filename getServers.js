@@ -220,6 +220,7 @@ function getServers(){
       // ip
       record.ip = getDynamic();
       if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
+        // console.log(record.ip)
         continue;
       }
       // unknown?
@@ -240,9 +241,10 @@ function getServers(){
     }
   
     // TODO: Properly detect the last server, for now this should work though
-    JSONdata.pop();
+    // JSONdata.pop();
     await server.deleteMany({});
     const pushed = await server.insertMany(JSONdata, {ordered: true});
+    // console.log(JSONdata.length);
     console.log("Got server list!");
     // fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
   }

@@ -31,4 +31,6 @@ XX XX XX XX XX XX XX XX
 
 NEED TO FIND:
  - current session time
- - password required
+ - ambient temp?
+ - pitstop/ refuelling required?  (time)
+ - stint data?

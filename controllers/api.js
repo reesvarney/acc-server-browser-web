@@ -10,7 +10,7 @@ const keyMap = {
 export default ({server})=>{
   router.get('/', async(req, res)=>{
     const queryData = {};
-    if(req.query != {} && req.query.show_full == undefined){
+    if(Object.keys(req.query).length > 0 && req.query.show_full == undefined){
       queryData.isFull = false;
     }
 
