@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 const schema = new mongoose.Schema({
   ip: String,
+  id: String,
   port: {
     tcp: Number,
     udp: Number

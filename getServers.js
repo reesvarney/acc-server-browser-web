@@ -215,6 +215,9 @@ function getServers(){
     }
 
     JSONdata = [];
+
+    const ids = [];
+
     while(clone.length > 3){
       let record = {};
       // ip
@@ -228,6 +231,9 @@ function getServers(){
       record.port = {};
       record.port.tcp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
       record.port.udp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
+      
+      record.id = `${record.ip}:${record.port.tcp}`;
+      
       record.misc.push(clone.splice(0, 2).join(""));
       // track
       const trackId = getDynamic();
@@ -237,13 +243,26 @@ function getServers(){
       record.name = getDynamic();
       // record
       record = getMetaLarge(record);
-      JSONdata.push(record);
+      const pushed = await server.updateOne({
+        id: {
+          $eq: record.id
+        },
+      }, {
+        $set: record
+      }, {
+        ordered: true,
+        upsert: true
+      });
+      ids.push(record.id);
     }
   
     // TODO: Properly detect the last server, for now this should work though
     // JSONdata.pop();
-    await server.deleteMany({});
-    const pushed = await server.insertMany(JSONdata, {ordered: true});
+    await server.deleteMany({
+      id: {
+        $nin: ids
+      }
+    });
     // console.log(JSONdata.length);
     console.log("Got server list!");
     // fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")

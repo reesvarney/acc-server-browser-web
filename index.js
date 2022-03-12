@@ -6,13 +6,11 @@ import mongoose from "mongoose";
 console.log("connecting to db: " + process.env.DB_URL)
 await mongoose.connect(process.env.DB_URL);
 
-console.log("Connecting to DB")
 import serverSchema from "./models/server.js";
 const models = {
   server: mongoose.model("Server", serverSchema)
 };
 
-console.log("Creating Compiler")
 import webpack from 'webpack';
 const compiler = webpack({
   entry: "./client/src/main.js",
@@ -33,8 +31,6 @@ compiler.watch({
   if(stats.hasErrors()) console.log(stats.compilation.errors);
 });
 
-console.log("Initialising controllers");
-
 const app = express();
 app.use(express.static("./client"));
 app.get('/coffee',(req, res)=>{res.sendStatus(418)});
@@ -53,12 +49,14 @@ import childProcess from "child_process";
 function getServers(){
   const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
 
-  child.stdout.on('data',function (data) {
-    console.log(data.toString());
-  });
-  child.on('error',function (data) {
-    console.log(data.toString());
-  });
+  if(process.env.CONSOLE_PATCH == "TRUE"){
+    child.stdout.on('data',function (data) {
+      console.log(data.toString());
+    });
+    child.on('error',function (data) {
+      console.log(data.toString());
+    });
+  }
 }
 (async()=>{
   getServers()
