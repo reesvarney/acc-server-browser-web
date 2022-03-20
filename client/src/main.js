@@ -33,6 +33,16 @@ async function main(){
     update();
   })
 
+  document.getElementById("hide_filters").addEventListener("click", function(){
+    document.querySelector(".filters-main").style.display = "none";
+    document.querySelector("#show_filters").style.display = "block";
+  });
+
+  document.getElementById("show_filters").addEventListener("click", function(){
+    document.querySelector(".filters-main").style.display = "flex";
+    document.querySelector("#show_filters").style.display = "none";
+  });
+
   console.log(getFavourites())
 
   document.getElementById("filter_favourites").value = (getFavourites()).join(",");

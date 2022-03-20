@@ -39,7 +39,8 @@ button:active{
 /* BANNER */
 .banner {
   background-color: rgb(17, 17, 17);
-  padding: 20px;
+  padding-left: 30px;
+  padding-right: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -58,11 +59,11 @@ button:active{
   flex-direction: column;
   gap: 20px;
   margin: 0px;
-  background-color: rgba(49, 49, 49, 0.8);
-  padding: 15px;
+  background-color: rgba(49, 49, 49, 0.932);
+  padding: 7px;
 }
 
-#filters>* {
+#filters>*:not(.filter-search) {
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -78,6 +79,7 @@ button:active{
 .filter-search{
   flex-grow: 1;
   display: flex;
+  gap: 0px;
 }
 
 .filter-search input {
@@ -98,6 +100,7 @@ button:active{
 }
 
 .filters-main {
+  position: relative;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
@@ -106,7 +109,7 @@ button:active{
   flex-wrap: wrap;
 }
 
-.update-button-area{
+.button-area{
   margin-left: auto;
   justify-self: flex-end;
   flex-grow: 1;
@@ -116,9 +119,33 @@ button:active{
   align-items: flex-end;
 }
 
+#show_filters {
+  display: none;
+  background-color: #3d3d3d;
+  font-size: 1.1em;
+  padding: 0px 20px;
+  box-shadow: inset 0 0 0 5px #1b1b1b;
+}
+
+#show_filters:hover {
+  background-color: #2b2b2b;
+}
+
 #update_button{
   padding: 5px 10px;
   font-size: 1.1em;
+}
+
+#hide_filters {
+  padding: 5px 10px;
+  font-size: 1.1em;
+  background: none;
+  box-shadow: inset 0 0 0 2px white;
+  margin-right: 6px;
+}
+
+#hide_filters:hover {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.712);
 }
 
 /* SERVERS */
