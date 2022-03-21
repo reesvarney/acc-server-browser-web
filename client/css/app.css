@@ -64,7 +64,7 @@ button:active{
 }
 
 #filters>*:not(.filter-search) {
-  display: flex;
+  display: none;
   flex-direction: row;
   gap: 20px;
 }
@@ -120,7 +120,7 @@ button:active{
 }
 
 #show_filters {
-  display: none;
+  display: block;
   background-color: #3d3d3d;
   font-size: 1.1em;
   padding: 0px 20px;
@@ -307,4 +307,28 @@ button:active{
 
 .grey-text {
   color: #aaa;
+}
+
+/* EXTRAS */
+.flag * {
+  max-height: 30px;
+  max-width: 50px;
+  font-size: 2em;
+}
+
+/* MODAL */
+#modal_overlay {
+  background-color: rgba(0,0,0,0.6);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #494949;
+  color: white;
 }

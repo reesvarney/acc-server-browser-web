@@ -21,7 +21,7 @@
 
     <div class="filter-search">
       <input name="search" type="text" placeholder="Search by Name">
-      <button id="show_filters">Filters</button>
+      <button id="show_filters" type="button">Filters</button>
     </div>
     <!-- <div class="filter-sort">
       Sort By:
@@ -126,7 +126,7 @@
         </div>
       </div>
       <div class="button-area">
-        <button id="hide_filters">Hide</button>
+        <button id="hide_filters" type="button">Hide</button>
         <button type="submit" id="update_button">Update</button>
       </div>
     </div>
@@ -148,9 +148,9 @@
 
     </td>
 
-    <td class="server-ip">
+    <!-- <td class="server-ip">
       {{ ip }}
-    </td>
+    </td> -->
 
 
     <td class="flex-col">
@@ -178,6 +178,14 @@
             SA: {{requirements.safetyRating}}
           </span>
         </div>
+      </div>
+
+      <div class="links">
+        {{#each links}}
+          <div class="link">
+            <a href="{{this.url}}">{{this.name}}</a>
+          </div>
+        {{/each}}
       </div>
     </td>
 
@@ -217,6 +225,12 @@
       <span class="grey-text">Drivers </span>{{connectedDrivers}}/{{maxDrivers}}
     </td>
 
-
+    <td class="flag">
+      {{#if extras.noCountry}}
+      <i class="fas fa-globe"></i>
+      {{else}}
+        <img height="auto"src="https://flagcdn.com/{{ extras.country }}.svg">
+      {{/if}}
+    </td>
   </tr>
 </template>

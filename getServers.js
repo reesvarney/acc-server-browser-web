@@ -243,7 +243,8 @@ function getServers(){
       record.name = getDynamic();
       // record
       record = getMetaLarge(record);
-      const pushed = await server.updateOne({
+      ids.push(record.id);
+      server.updateOne({
         id: {
           $eq: record.id
         },
@@ -253,7 +254,6 @@ function getServers(){
         ordered: true,
         upsert: true
       });
-      ids.push(record.id);
     }
   
     // TODO: Properly detect the last server, for now this should work though
