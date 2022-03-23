@@ -88,6 +88,7 @@ export default class{
             server.links.push({
               name: link.name,
               url: server.extras[link.id],
+              type: link.id
             })
           }
         }

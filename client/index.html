@@ -186,9 +186,7 @@
 
       <div class="links">
         {{#each links}}
-          <div class="link">
-            <a href="{{this.url}}">{{this.name}}</a>
-          </div>
+          <button class="link" onclick="window.open('{{this.url}}', '_blank').focus()">{{this.name}}</button>
         {{/each}}
       </div>
     </td>

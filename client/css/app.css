@@ -321,6 +321,32 @@ button:active{
   font-size: 2em;
 }
 
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.links .link{
+  text-decoration: none;
+  background-color: rgb(160, 0, 0);
+  box-shadow: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px;
+}
+
+.links .link:hover{
+  background-color: rgb(120, 0, 0);
+}
+
+.links .link:active{
+  background-color: rgb(83, 0, 0);
+}
+
+
 /* MODAL */
 #modal_overlay {
   background-color: rgba(0,0,0,0.6);
