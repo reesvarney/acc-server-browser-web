@@ -127,7 +127,7 @@ async function registerExtendedData(ip){
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        port: process.env.port
+        port: process.env.port || 80
       })
     });
   } catch(err) {
