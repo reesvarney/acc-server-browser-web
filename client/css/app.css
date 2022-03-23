@@ -281,6 +281,18 @@ button:active{
   color: rgb(255, 255, 255);
 }
 
+.server-copy {
+  font-size: 1.8em;
+  height: 100%;
+  padding-left: 20px;
+  width:0.1%;
+  white-space: nowrap;
+}
+
+.server-copy i {
+  cursor: pointer;
+}
+
 /* SESSION */
 .sessions{
   margin-right: 20px;

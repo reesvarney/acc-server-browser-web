@@ -140,7 +140,12 @@
 </body>
 
 <template id="server-template">
+
   <tr class="server">
+    <td class="server-copy">
+      <i class="far fa-copy" onclick="navigator.clipboard.writeText(`{{name}}`)"></i>
+    </td>
+
     <td class="server-favourite" onclick="toggleFavourite(this, '{{ip}}:{{port.tcp}}')">
       <div class="server-favourite-icon">
         {{#if isFavourite }}
