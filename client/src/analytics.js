@@ -8,7 +8,8 @@ async function main(){
     function gtag(){dataLayer.push(arguments);}
     let userId = localStorage.getItem("uuid");
     if(userId === null){
-      userId = uuidv4()
+      userId = uuidv4();
+      localStorage.setItem("uuid", userId);
     }
     gtag('js', new Date());
     gtag('config', ga_id, {
