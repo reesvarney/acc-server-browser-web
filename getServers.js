@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import fetch from "node-fetch";
 await mongoose.connect(process.env.DB_URL);
 const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
-console.log(process.env.port);
 import serverSchema from "./models/server.js";
 const server= mongoose.model("Server", serverSchema)
 
