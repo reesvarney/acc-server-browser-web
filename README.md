@@ -20,6 +20,45 @@ ip.dst == 144.76.81.131
 
 6. The "query string" can be found in a `WebSocket Binary [FIN] [MASKED]` request. It will contain some IP addresses in the ASCII preview below, however there are a few like this and the one that you need specifically will be different as when you select it, the whole preview will be highlighted as data. For this, right click on the data and copy it as a hex stream.
 
+### Enhanced Data API
+The enhanced data API is a (WIP) feature that allows server operators to provide extra information to the server browser on top of what is available through Kunos. 
+
+When retrieving the servers from kunos, the browser server makes an additional POST request to `[ACC SERVER IP]:8953/enhanced_data` with the JSON data ``` {port: [BROWSER SERVER PORT]}``` to allow the server operator to make a request to the enhanced data API through POST to `[BROWSER SERVER IP]:[BROWSER SERVER PORT]/servers/enhanced_data` with JSON data in the request body.
+
+Currently the following data is supported to be included in the request body (though it may not currently all be displayed):
+```json
+{
+    provider: String, // Server provider e.g. ACCWEB
+    discord: String, // Discord invite
+    teamspeak: String, // Teamspeak connect URL
+    homepage: String, // URL to the homepage of your server
+    description: String, // Description of your server
+    country: String, // 2 Letter ISO code + EU/ UN
+    broadcast: String, // Link to twitch/ youtube stream
+    liveries: [
+      String // List of URLs to liveries that are used on the server
+    ],
+    leaderboard: [
+      {
+        name: String, // Driver name
+        time: Number, // Driver time in miliseconds
+        car: String, // Driver car
+      }
+    ],
+    connectedDrivers: [
+      {
+        name: String, // Driver name
+        carNumber: Number, // Driver car number
+        laps: Number, // Driver laps completed
+        raceGap: Number, // Gap to driver ahead (if in a race / not first) in miliseconds
+        qualiTime: Number, // Currently Qualy time (if in qualifying) in miliseconds
+        car: String, // Driver car
+      }
+    ],
+  }
+```
+After receiving the data, the browser server should issue a HTTP `200` status response to indicate the enhanced data has been received (unless there has been any issues). You can then continue to send POST requests to the browser server when the enhanced data needs to be updated.
+
 ### Deployment
 1. Install MongoDB
 There are multiple ways to do this, I recommend using the docker image with docker desktop. You could also use MongoDB Atlas for free cloud hosting.
