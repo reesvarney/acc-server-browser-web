@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import fs from "fs/promises";
+import fetch from "node-fetch";
 await mongoose.connect(process.env.DB_URL);
 
 import serverSchema from "./models/server.js";
@@ -19,7 +19,8 @@ const classes = {
   "fa" : "Mixed",
   "00" : "GT3",
   "07" : "GT4",
-  "f9" : "GTC"
+  "f9" : "GTC",
+  "0c" : "TCX"
 }
 
 const standard_bool = {
@@ -116,8 +117,16 @@ function getTrack(id){
   }
 }
 
-let JSONdata = [];
+async function checkExtendedData(ip){
+  const res = await fetch(`http://${ip}:8953/extended_data`, {
+    timeout: 500
+  });
+  // validate response data
+  const data = res.json();
+  console.log(data);
+}
 
+let JSONdata = [];
 function getServers(){
   console.log("Getting server list...");
 
@@ -244,14 +253,11 @@ function getServers(){
       // record
       record = getMetaLarge(record);
       ids.push(record.id);
-      server.updateOne({
-        id: {
-          $eq: record.id
-        },
+      await server.updateOne({
+        id: record.id,
       }, {
         $set: record
       }, {
-        ordered: true,
         upsert: true
       });
     }

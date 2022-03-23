@@ -257,7 +257,7 @@ button:active{
 }
 
 .server-class.gt3{
-  background-color: #1b1b1b;
+  background-color: #464646;
   color: white;
 }
 
@@ -274,6 +274,11 @@ button:active{
 .server-class.mixed{
   background-color: white;
   color: black;
+}
+
+.server-class.tcx{
+  background-color: rgb(1, 135, 168);
+  color: rgb(255, 255, 255);
 }
 
 /* SESSION */
