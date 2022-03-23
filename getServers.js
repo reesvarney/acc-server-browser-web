@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 await mongoose.connect(process.env.DB_URL);
-
+const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
+console.log(process.env.port);
 import serverSchema from "./models/server.js";
 const server= mongoose.model("Server", serverSchema)
 
@@ -117,17 +118,26 @@ function getTrack(id){
   }
 }
 
-async function checkExtendedData(ip){
-  const res = await fetch(`http://${ip}:8953/extended_data`, {
-    timeout: 500
-  });
-  // validate response data
-  const data = res.json();
-  console.log(data);
+async function registerExtendedData(ip){
+  try {
+    await fetch(`http://${ip}:8953/extended_data`, {
+      method: "POST",
+      timeout: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        port: process.env.port
+      })
+    });
+  } catch(err) {
+    // ignore, simply means server does not support it
+  }
+
 }
 
 let JSONdata = [];
-function getServers(){
+function getServers(isFirst=false){
   console.log("Getting server list...");
 
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
@@ -253,29 +263,33 @@ function getServers(){
       // record
       record = getMetaLarge(record);
       ids.push(record.id);
-      await server.updateOne({
+      const pushed = await server.findOneAndUpdate({
         id: record.id,
       }, {
         $set: record
       }, {
         upsert: true
       });
+      if(isFirst || pushed === null){
+        let queryIP = record.ip;
+        if(queryIP === localIP){
+          queryIP = "localhost"
+        }
+        registerExtendedData(queryIP);
+      }
+
     }
   
-    // TODO: Properly detect the last server, for now this should work though
-    // JSONdata.pop();
     await server.deleteMany({
       id: {
         $nin: ids
       }
     });
-    // console.log(JSONdata.length);
     console.log("Got server list!");
-    // fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
   }
 }
 
-getServers()
+getServers(true)
 const getServerLoop = setInterval(async()=>{
-  getServers();
+  getServers(false);
 }, 2 * 60 * 1000);
