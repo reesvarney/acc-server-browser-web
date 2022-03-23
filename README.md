@@ -59,6 +59,8 @@ Currently the following data is supported to be included in the request body (th
 ```
 After receiving the data, the browser server should issue a HTTP `200` status response to indicate the enhanced data has been received (unless there has been any issues). You can then continue to send POST requests to the browser server when the enhanced data needs to be updated.
 
+Note: Links MUST include the protocol e.g. `https://`.
+
 ### Deployment
 1. Install MongoDB
 There are multiple ways to do this, I recommend using the docker image with docker desktop. You could also use MongoDB Atlas for free cloud hosting.
