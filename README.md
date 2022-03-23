@@ -26,7 +26,7 @@ The enhanced data API is a (WIP) feature that allows server operators to provide
 When retrieving the servers from kunos, the browser server makes an additional POST request to `[ACC SERVER IP]:8953/enhanced_data` with the JSON data ``` {port: [BROWSER SERVER PORT]}``` to allow the server operator to make a request to the enhanced data API through POST to `[BROWSER SERVER IP]:[BROWSER SERVER PORT]/servers/enhanced_data` with JSON data in the request body.
 
 Currently the following data is supported to be included in the request body (though it may not currently all be displayed):
-```json
+```js
 {
     provider: String, // Server provider e.g. ACCWEB
     discord: String, // Discord invite
