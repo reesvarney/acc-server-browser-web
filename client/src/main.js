@@ -1,5 +1,7 @@
 import smartLoad from "./smartLoad.js";
 import {getFavourites, setFavourites} from "./storage.js";
+import addAnalytics from "./analytics.js";
+addAnalytics();
 const data = await fetch("/servers");
 const jsonData = await data.json();
 let serverList = null;
@@ -42,9 +44,6 @@ async function main(){
     document.querySelector(".filters-main").style.display = "flex";
     document.querySelector("#show_filters").style.display = "none";
   });
-
-  console.log(getFavourites())
-
   document.getElementById("filter_favourites").value = (getFavourites()).join(",");
 
   async function update(){
