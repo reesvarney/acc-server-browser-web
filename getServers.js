@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import fs from "fs/promises";
+import fetch from "node-fetch";
 await mongoose.connect(process.env.DB_URL);
-
+const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
 import serverSchema from "./models/server.js";
 const server= mongoose.model("Server", serverSchema)
 
@@ -19,7 +19,8 @@ const classes = {
   "fa" : "Mixed",
   "00" : "GT3",
   "07" : "GT4",
-  "f9" : "GTC"
+  "f9" : "GTC",
+  "0c" : "TCX"
 }
 
 const standard_bool = {
@@ -116,9 +117,26 @@ function getTrack(id){
   }
 }
 
-let JSONdata = [];
+async function registerExtendedData(ip){
+  try {
+    await fetch(`http://${ip}:8953/extended_data`, {
+      method: "POST",
+      timeout: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        port: process.env.port || 80
+      })
+    });
+  } catch(err) {
+    // ignore, simply means server does not support it
+  }
 
-function getServers(){
+}
+
+let JSONdata = [];
+function getServers(isFirst=false){
   console.log("Getting server list...");
 
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
@@ -243,33 +261,34 @@ function getServers(){
       record.name = getDynamic();
       // record
       record = getMetaLarge(record);
-      const pushed = await server.updateOne({
-        id: {
-          $eq: record.id
-        },
+      ids.push(record.id);
+      const pushed = await server.findOneAndUpdate({
+        id: record.id,
       }, {
         $set: record
       }, {
-        ordered: true,
         upsert: true
       });
-      ids.push(record.id);
+      if(isFirst || pushed === null){
+        let queryIP = record.ip;
+        if(queryIP === localIP){
+          queryIP = "localhost"
+        }
+        registerExtendedData(queryIP);
+      }
+
     }
   
-    // TODO: Properly detect the last server, for now this should work though
-    // JSONdata.pop();
     await server.deleteMany({
       id: {
         $nin: ids
       }
     });
-    // console.log(JSONdata.length);
     console.log("Got server list!");
-    // fs.writeFile("./debug.json", JSON.stringify(JSONdata,null, 2), "utf-8")
   }
 }
 
-getServers()
+getServers(true)
 const getServerLoop = setInterval(async()=>{
-  getServers();
+  getServers(false);
 }, 2 * 60 * 1000);

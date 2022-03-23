@@ -1,6 +1,29 @@
 import Handlebars from "handlebars/dist/handlebars.js";
 import {getFavourites, setFavourites} from "./storage.js";
 
+const linkData = [
+  {
+    id: "discord",
+    name: "Discord",
+    url: null,
+  },
+  {
+    id: "teamspeak",
+    name: "Teamspeak",
+    url: null,
+  },
+  {
+    id: "homepage",
+    name: "Homepage",
+    url: null,
+  },
+  {
+    id: "broadcast",
+    name: "Broadcast",
+    url: null,
+  },
+]
+
 export default class{
   constructor(elSelector, templateSelector, data){
     this.data = data;
@@ -56,6 +79,23 @@ export default class{
   addChild(){
     if(this.data.length > 0){
       const server = this.data.splice(0, 1)[0];
+      if(server.extras === undefined){
+        server.extras = {}; 
+      } else {
+        server.links = [];
+        for(const link of linkData){
+          if(server.extras[link.id] !== undefined){
+            server.links.push({
+              name: link.name,
+              url: server.extras[link.id],
+              type: link.id
+            })
+          }
+        }
+      };
+      if(server.extras.country === undefined){
+        server.extras.noCountry = true;
+      }
       server.isFavourite = getFavourites().includes(`${server.ip}:${server.port.tcp}`);
       const div =  document.createElement("template");
       div.innerHTML =  this.template(server);

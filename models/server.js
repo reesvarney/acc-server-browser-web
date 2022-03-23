@@ -35,7 +35,36 @@ const schema = new mongoose.Schema({
     safetyRating: Number
   },
   currentSession: Number,
-  isFull: Boolean
+  isFull: Boolean,
+  extras: {
+    provider: String,
+    discord: String,
+    teamspeak: String,
+    homepage: String,
+    description: String,
+    country: String,
+    broadcast: String,
+    liveries: [
+      String
+    ],
+    leaderboard: [
+      {
+        name: String,
+        time: Number,
+        car: String,
+      }
+    ],
+    connectedDrivers: [
+      {
+        name: String,
+        carNumber: Number,
+        laps: Number,
+        raceGap: Number,
+        qualiTime: Number,
+        car: String,
+      }
+    ],
+  }
 },{
   collation: {
     locale : "en",

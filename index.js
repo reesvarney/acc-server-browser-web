@@ -3,6 +3,7 @@ const port = process.env.PORT || 80;
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
 console.log("connecting to db: " + process.env.DB_URL)
 await mongoose.connect(process.env.DB_URL);
 
@@ -32,6 +33,8 @@ compiler.watch({
 });
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static("./client"));
 app.get('/coffee',(req, res)=>{res.sendStatus(418)});
 

@@ -1,6 +1,8 @@
 "use strict";
 import express from "express";
 const router = express.Router();
+import fetch from 'node-fetch';
+const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
 
 const keyMap = {
   "sa" : ["safetyRating", "requirements.safetyRating"],
@@ -15,7 +17,7 @@ export default ({server})=>{
     }
 
     if ("search" in req.query) {
-      queryData.name =  { "$regex": req.query.search, "$options": "i" }
+      queryData.name =  { "$regex": req.query.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "$options": "i" }
     }
 
     if ("favourites" in req.query) {
@@ -73,6 +75,38 @@ export default ({server})=>{
       }
     );
     res.json(data);
+  });
+
+  router.post('/enhanced_data/', async(req, res)=> {
+    try{
+      let ip = req.socket.remoteAddress;
+      if(ip === "::1"){
+        ip = localIP;
+      }
+      const id = `${ip}:${req.body.port}`;
+      const data = {
+        extras: {
+          discord: req.body.discord,
+          teamspeak: req.body.teamspeak,
+          homepage: req.body.homepage,
+          liveries: req.body.liveries,
+          description: req.body.description,
+          leaderboards: req.body.leaderboards,
+          country: req.body.country,
+          broadcast: req.body.broadcast
+        }
+      };
+      await server.updateOne({
+        id: {
+          $eq: id
+        }
+      }, {
+        $set: data
+      });
+      res.status(200).send("OK");
+    } catch(err){
+      res.status(400).json({error: err.msg});
+    };
   });
 
   return router;
