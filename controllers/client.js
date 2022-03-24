@@ -11,4 +11,10 @@ router.get('/ga_id', (req,res)=>{
   res.send(process.env.GA_ID || "");
 });
 
+if(process.env.GOOGLE_VERIFICATION !== undefined){
+  router.get(`/${process.env.GOOGLE_VERIFICATION}.html`, (req,res)=>{
+    res.send(`google-site-verification: ${process.env.GOOGLE_VERIFICATION}.html`);
+  });
+};
+
 export default router;
