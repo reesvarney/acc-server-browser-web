@@ -256,27 +256,27 @@ button:active{
   font-weight: 600;
 }
 
-.server-class.gt3{
+.server-class.GT3{
   background-color: #464646;
   color: white;
 }
 
-.server-class.gt4{
+.server-class.GT4{
   color: white;
   background-color: rgb(33, 40, 105);
 }
 
-.server-class.gtc{
+.server-class.GTC{
   color: white;
   background-color: rgb(255, 136, 0);
 }
 
-.server-class.mixed{
+.server-class.Mixed{
   background-color: white;
   color: black;
 }
 
-.server-class.tcx{
+.server-class.TCX{
   background-color: rgb(1, 135, 168);
   color: rgb(255, 255, 255);
 }
