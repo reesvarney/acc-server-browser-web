@@ -20,7 +20,30 @@ ip.dst == 144.76.81.131
 
 6. The "query string" can be found in a `WebSocket Binary [FIN] [MASKED]` request. It will contain some IP addresses in the ASCII preview below, however there are a few like this and the one that you need specifically will be different as when you select it, the whole preview will be highlighted as data. For this, right click on the data and copy it as a hex stream.
 
-### Enhanced Data API
+### Deployment
+1. Install MongoDB
+There are multiple ways to do this, I recommend using the docker image with docker desktop. You could also use MongoDB Atlas for free cloud hosting.
+2. Install nodejs/ npm
+3. Install the dependencies
+```
+npm install
+```
+4. Set up the env. This can either be done by setting the environment variables directly or by creating a .env file in the server's root folder.
+```
+DB_URL="mongodb://<The URL of your mongoDB database, including any needed authentication. This will most likely be "localhost:27017" if you are running it locally>"
+QUERYSTRING="<The query request string you got earlier>"
+AUTHSTRING="<The auth request string you got earlier>"
+```
+5. Run the server
+```
+npm start
+```
+
+You can also easily use Heroku or CapRover to deploy it by using the repository as a source for your app. You will still need to set up a MongoDB server (in CapRover you can use the MongoDB one click app).
+
+Note: In heroku the dyno will not automatically go into sleep as the requests for server data count as network activity.
+
+## Enhanced Data API
 The enhanced data API is a (WIP) feature that allows server operators to provide extra information to the server browser on top of what is available through Kunos. 
 
 When retrieving the servers from kunos, the browser server makes an additional POST request to `[ACC SERVER IP]:8953/enhanced_data` with the JSON data ``` {port: [BROWSER SERVER PORT]}``` to allow the server operator to make a request to the enhanced data API through POST to `[BROWSER SERVER IP]:[BROWSER SERVER PORT]/servers/enhanced_data` with JSON data in the request body.
@@ -60,26 +83,3 @@ Currently the following data is supported to be included in the request body (th
 After receiving the data, the browser server should issue a HTTP `200` status response to indicate the enhanced data has been received (unless there has been any issues). You can then continue to send POST requests to the browser server when the enhanced data needs to be updated.
 
 Note: Links MUST include the protocol e.g. `https://`.
-
-### Deployment
-1. Install MongoDB
-There are multiple ways to do this, I recommend using the docker image with docker desktop. You could also use MongoDB Atlas for free cloud hosting.
-2. Install nodejs/ npm
-3. Install the dependencies
-```
-npm install
-```
-4. Set up the env. This can either be done by setting the environment variables directly or by creating a .env file in the server's root folder.
-```
-DB_URL="mongodb://<The URL of your mongoDB database, including any needed authentication. This will most likely be "localhost:27017" if you are running it locally>"
-QUERYSTRING="<The query request string you got earlier>"
-AUTHSTRING="<The auth request string you got earlier>"
-```
-5. Run the server
-```
-npm start
-```
-
-You can also easily use Heroku or CapRover to deploy it by using the repository as a source for your app. You will still need to set up a MongoDB server (in CapRover you can use the MongoDB one click app).
-
-Note: In heroku the dyno will not automatically go into sleep as the requests for server data count as network activity.
