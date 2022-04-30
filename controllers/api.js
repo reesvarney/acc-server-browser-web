@@ -89,11 +89,10 @@ export default ({server})=>{
           discord: req.body.discord,
           teamspeak: req.body.teamspeak,
           homepage: req.body.homepage,
-          liveries: req.body.liveries,
           description: req.body.description,
-          leaderboards: req.body.leaderboards,
           country: req.body.country,
-          broadcast: req.body.broadcast
+          broadcast: req.body.broadcast,
+          drivers: req.body.drivers
         }
       };
       await server.updateOne({

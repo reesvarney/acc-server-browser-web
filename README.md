@@ -58,24 +58,16 @@ Currently the following data is supported to be included in the request body (th
     description: String, // Description of your server
     country: String, // 2 Letter ISO code + EU/ UN
     broadcast: String, // Link to twitch/ youtube stream
-    liveries: [
-      String // List of URLs to liveries that are used on the server
-    ],
-    leaderboard: [
-      {
-        name: String, // Driver name
-        time: Number, // Driver time in miliseconds
-        car: String, // Driver car
-      }
-    ],
-    connectedDrivers: [
+    drivers: [
       {
         name: String, // Driver name
         carNumber: Number, // Driver car number
         laps: Number, // Driver laps completed
         raceGap: Number, // Gap to driver ahead (if in a race / not first) in miliseconds
         qualiTime: Number, // Currently Qualy time (if in qualifying) in miliseconds
-        car: String, // Driver car
+        car: String, // Driver car,
+        team: String // Team - This will be used for livery sharing in the future
+        steamID: String // SteamID64 of the current driver - Will allow people to filter by friends list and add others on steam after a race
       }
     ],
   }

@@ -44,17 +44,7 @@ const schema = new mongoose.Schema({
     description: String,
     country: String,
     broadcast: String,
-    liveries: [
-      String
-    ],
-    leaderboard: [
-      {
-        name: String,
-        time: Number,
-        car: String,
-      }
-    ],
-    connectedDrivers: [
+    drivers: [
       {
         name: String,
         carNumber: Number,
@@ -62,6 +52,8 @@ const schema = new mongoose.Schema({
         raceGap: Number,
         qualiTime: Number,
         car: String,
+        team: String,
+        steamID: String,
       }
     ],
   }
