@@ -2,8 +2,6 @@ import smartLoad from "./smartLoad.js";
 import {getFavourites, setFavourites, getFilters, setFilter} from "./storage.js";
 import addAnalytics from "./analytics.js";
 addAnalytics();
-const data = await fetch("/servers");
-const jsonData = await data.json();
 let serverList = null;
 
 window["toggleFavourite"] = function(el, ip){
