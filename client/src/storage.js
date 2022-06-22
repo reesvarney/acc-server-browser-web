@@ -13,4 +13,15 @@ function setFavourites(favourites){
   document.getElementById("filter_favourites").value = favourites.join(",");
 }
 
-export {getFavourites, setFavourites}
+function getFilters(){
+  const filters = JSON.parse(localStorage.getItem("filters")) || {};
+  return filters
+}
+
+function setFilter(id, value){
+  const filters = getFilters();
+  filters[id] = value;
+  localStorage.setItem("filters", JSON.stringify(filters));
+}
+
+export {getFavourites, setFavourites, getFilters, setFilter}

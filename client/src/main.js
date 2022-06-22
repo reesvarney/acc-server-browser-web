@@ -1,5 +1,5 @@
 import smartLoad from "./smartLoad.js";
-import {getFavourites, setFavourites} from "./storage.js";
+import {getFavourites, setFavourites, getFilters, setFilter} from "./storage.js";
 import addAnalytics from "./analytics.js";
 addAnalytics();
 const data = await fetch("/servers");
@@ -23,9 +23,25 @@ window["toggleFavourite"] = function(el, ip){
   setFavourites(favourites);
 }
 
-async function main(){
-  serverList = new smartLoad("#servers", "#server-template", jsonData);
+async function populateFilters(){
+  const filterValues = getFilters();
+  for(const el of document.querySelectorAll('.filter input:not(#filter_favourites)')){
+    if(el.name in filterValues){
+      const value = filterValues[el.name];
+      if(el.type === "checkbox"){
+        el.checked = value;
+      } else {
+        el.value = value;
+      }
+    }
+    el.addEventListener("change", ()=>{
+      setFilter(el.name, (el.type === "checkbox") ? el.checked : el.value);
+    });
+  }
+}
 
+async function main(){
+  populateFilters();
   document.getElementById("filters").addEventListener("submit", function(e){
     e.preventDefault()
     update();
@@ -44,6 +60,7 @@ async function main(){
     document.querySelector(".filters-main").style.display = "flex";
     document.querySelector("#show_filters").style.display = "none";
   });
+  
   document.getElementById("filter_favourites").value = (getFavourites()).join(",");
 
   async function update(){
@@ -52,6 +69,8 @@ async function main(){
     const resJSON = await res.json();
     serverList.replaceData(resJSON)
   }
+  serverList = await new smartLoad("#servers", "#server-template", []);
+  update();
 }
 
 if (document.readyState !== "loading") {
