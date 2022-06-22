@@ -63,11 +63,10 @@ Currently the following data is supported to be included in the request body (th
         name: String, // Driver name
         carNumber: Number, // Driver car number
         laps: Number, // Driver laps completed
-        raceGap: Number, // Gap to driver ahead (if in a race / not first) in miliseconds
-        qualiTime: Number, // Currently Qualy time (if in qualifying) in miliseconds
-        car: String, // Driver car,
-        team: String, // Team - This will be used for livery sharing in the future
-        steamID: String // SteamID64 of the current driver - Will allow people to filter by friends list and add others on steam after a race
+        bestLap: Number, // Best laptime in MS
+        car: Number, // Driver car ID
+        steamID: String, // SteamID64 of the current driver - Will allow people to filter by friends list and add others on steam after a race
+        position: Number, // Position of the car in the standings
       }
     ],
   }

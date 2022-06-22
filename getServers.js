@@ -119,7 +119,7 @@ function getTrack(id){
 
 async function registerExtendedData(ip){
   try {
-    await fetch(`http://${ip}:8953/extended_data`, {
+    await fetch(`http://${ip}:8953/enhanced_data`, {
       method: "POST",
       timeout: 500,
       headers: {
@@ -131,6 +131,7 @@ async function registerExtendedData(ip){
     });
   } catch(err) {
     // ignore, simply means server does not support it
+    if(!["ETIMEDOUT", "ECONNREFUSED"].includes(err.code)) console.log(err);
   }
 
 }

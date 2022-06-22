@@ -49,11 +49,10 @@ const schema = new mongoose.Schema({
         name: String,
         carNumber: Number,
         laps: Number,
-        raceGap: Number,
-        qualiTime: Number,
-        car: String,
-        team: String,
+        bestLap: Number,
+        car: Number,
         steamID: String,
+        position: Number,
       }
     ],
   }
