@@ -99,6 +99,18 @@ const trackData = {
   },
   "zolder": {
     name: "Zolder"
+  },
+  "watkins_glen": {
+    name: "Watkins Glen",
+    dlc: "atp"
+  },
+  "cota": {
+    name: "Circuit of the Americas",
+    dlc: "atp"
+  },
+  "indianapolis": {
+    name: "Indianapolis Motor Speedway",
+    dlc: "atp"
   }
 };
 
@@ -110,6 +122,8 @@ function getTrack(id){
       track.dlc = "base"
     };
     return track;
+  } else {
+    console.log(`New track: ${id}, please create an issue to add it`);
   }
   return {
     name: id,
