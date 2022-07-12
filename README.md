@@ -42,35 +42,3 @@ npm start
 You can also easily use Heroku or CapRover to deploy it by using the repository as a source for your app. You will still need to set up a MongoDB server (in CapRover you can use the MongoDB one click app).
 
 Note: In heroku the dyno will not automatically go into sleep as the requests for server data count as network activity.
-
-## Enhanced Data API
-The enhanced data API is a (WIP) feature that allows server operators to provide extra information to the server browser on top of what is available through Kunos. 
-
-When retrieving the servers from kunos, the browser server makes an additional POST request to `[ACC SERVER IP]:8953/enhanced_data` with the JSON data ``` {port: [BROWSER SERVER PORT]}``` to allow the server operator to make a request to the enhanced data API through POST to `[BROWSER SERVER IP]:[BROWSER SERVER PORT]/servers/enhanced_data` with JSON data in the request body.
-
-Currently the following data is supported to be included in the request body (though it may not currently all be displayed):
-```js
-{
-    provider: String, // Server provider e.g. ACCWEB
-    discord: String, // Discord invite
-    teamspeak: String, // Teamspeak connect URL
-    homepage: String, // URL to the homepage of your server
-    description: String, // Description of your server
-    country: String, // 2 Letter ISO code + EU/ UN
-    broadcast: String, // Link to twitch/ youtube stream
-    drivers: [
-      {
-        name: String, // Driver name
-        carNumber: Number, // Driver car number
-        laps: Number, // Driver laps completed
-        bestLap: Number, // Best laptime in MS
-        car: Number, // Driver car ID
-        steamID: String, // SteamID64 of the current driver - Will allow people to filter by friends list and add others on steam after a race
-        position: Number, // Position of the car in the standings
-      }
-    ],
-  }
-```
-After receiving the data, the browser server should issue a HTTP `200` status response to indicate the enhanced data has been received (unless there has been any issues). You can then continue to send POST requests to the browser server when the enhanced data needs to be updated.
-
-Note: Links MUST include the protocol e.g. `https://`.
