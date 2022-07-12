@@ -2,14 +2,19 @@
 import express from "express";
 const router = express.Router();
 import fetch from 'node-fetch';
-const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
+let localIP = "";
+try{
+  localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip
+} catch(err){
+  console.error("Could not get server IP")
+}
 
 const keyMap = {
   "sa" : ["safetyRating", "requirements.safetyRating"],
   "tm" : ["trackMedals","requirements.trackMedals"]
 }
 
-export default ({server})=>{
+export default ({models: {server}, kunosStatus })=>{
   router.get('/', async(req, res)=>{
     const queryData = {};
     if(Object.keys(req.query).length > 0 && req.query.show_full == undefined){
@@ -75,6 +80,10 @@ export default ({server})=>{
       }
     );
     res.json(data);
+  });
+
+  router.get('/status', async(req, res)=> {
+    res.send(kunosStatus());
   });
 
   router.post('/enhanced_data/', async(req, res)=> {

@@ -329,6 +329,10 @@ button:active{
   flex-direction: row;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .grey-text {
   color: #aaa;
 }
@@ -381,4 +385,19 @@ button:active{
   transform: translate(-50%, -50%);
   background-color: #494949;
   color: white;
+}
+
+/* STATUS */
+.status-area {
+  margin-right: 40px;
+  font-size: 1.1em;
+}
+
+#kunos_status {
+  font-weight: bold;
+  color: red;
+}
+
+#kunos_status.online {
+  color: green;
 }

@@ -61,14 +61,28 @@ async function main(){
   
   document.getElementById("filter_favourites").value = (getFavourites()).join(",");
 
-  async function update(){
-    const data = new FormData(document.getElementById("filters"));
-    const res = await fetch(`/servers?${new URLSearchParams(data).toString()}`);
-    const resJSON = await res.json();
-    serverList.replaceData(resJSON)
-  }
   serverList = await new smartLoad("#servers", "#server-template", []);
   update();
+}
+
+function update(){
+  updateServers();
+  updateStatus();
+}
+
+async function updateServers(){
+  const data = new FormData(document.getElementById("filters"));
+  const res = await fetch(`/servers?${new URLSearchParams(data).toString()}`);
+  const resJSON = await res.json();
+  serverList.replaceData(resJSON)
+}
+
+async function updateStatus(){
+  const res = await fetch(`/servers/status`);
+  const status = await res.text();
+  const statusDiv = document.getElementById("kunos_status");
+  statusDiv.innerText = status;
+  statusDiv.classList[(status === "online")? "add": "remove"]("online");
 }
 
 if (document.readyState !== "loading") {

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 await mongoose.connect(process.env.DB_URL);
-const localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
 import serverSchema from "./models/server.js";
 const server= mongoose.model("Server", serverSchema)
 
@@ -169,6 +168,8 @@ function getServers(isFirst=false){
     ws.send(authString);
     const hex = Buffer.from(queryString, "hex");
     ws.send(hex);
+    // TODO: Set status to online
+    console.log(`status=online`);
   })
   
   ws.on("message", (data)=>{
@@ -178,8 +179,11 @@ function getServers(isFirst=false){
   })
 
   ws.on("error", (err)=>{
+    // TODO: Set status to offline
+    console.log(`status=offline`);
     console.log(err)
-  })
+  });
+
   ws.on("unexpected-response", (err)=>{
     console.log(err)
   })
@@ -284,14 +288,6 @@ function getServers(isFirst=false){
       }, {
         upsert: true
       });
-      if(isFirst || pushed === null){
-        let queryIP = record.ip;
-        if(queryIP === localIP){
-          queryIP = "localhost"
-        }
-        registerExtendedData(queryIP);
-      }
-
     }
   
     await server.deleteMany({

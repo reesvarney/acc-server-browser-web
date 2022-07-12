@@ -38,8 +38,13 @@ app.use(bodyParser.json());
 app.use(express.static("./client"));
 app.get('/coffee',(req, res)=>{res.sendStatus(418)});
 
+const controllerData = {
+  models,
+  kunosStatus: getStatus
+}
+
 import api from "./controllers/api.js";
-app.use('/servers', api(models));
+app.use('/servers', api(controllerData));
 
 import client from "./controllers/client.js";
 app.use('/', client);
@@ -48,19 +53,25 @@ const server = app.listen(port, ()=>{
   console.log(`Listening on port: ${server.address().port}`)
 });
 
-import childProcess from "child_process";
-function getServers(){
-  const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
+let status = "online";
 
-  if(process.env.CONSOLE_PATCH == "TRUE"){
-    child.stdout.on('data',function (data) {
-      console.log(data.toString());
-    });
-    child.on('error',function (data) {
-      console.log(data.toString());
-    });
-  }
+function getStatus(){
+  return status
 }
-(async()=>{
-  getServers()
-})();
+
+import childProcess from "child_process";
+async function getServers(){
+  const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
+  child.stdout.on('data',function (data) {
+    const matches = data.toString().match(/status=(online|offline)/);
+    if(matches !== null) {
+      status = matches[1]
+    }
+    console.log(data.toString());
+  });
+  child.on('error',function (data) {
+    console.error(data.toString());
+  });
+}
+
+getServers()

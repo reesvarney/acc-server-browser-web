@@ -16,14 +16,20 @@
       <h1 class="site-title">
         ACC Community Server Browser Project
       </h1>
-      <button aria-label="Refresh Button" id="refresh_button">
-        <i class="fas fa-redo-alt"></i>
-      </button>
+      <div class="flex-row flex-wrap">
+        <div class="status-area">
+          Status: <span id="kunos_status" class="online">online</span>
+        </div>
+        <button aria-label="Refresh Button" id="refresh_button">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </div>
+
     </div>
+
+
     <img class="background" alt="" src="/img/bg.jpg">
     <form id="filters">
-  
-  
       <div class="filter-search">
         <input name="search" type="text" placeholder="Search by Name">
         <button id="show_filters" type="button">Filters</button>
