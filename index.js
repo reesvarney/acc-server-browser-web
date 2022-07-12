@@ -60,7 +60,7 @@ function getStatus(){
 }
 
 import childProcess from "child_process";
-async function getServers(){
+function getServers(){
   const child = childProcess.spawn("node", ["./getServers.js"], {env: process.env});
   child.stdout.on('data',function (data) {
     const matches = data.toString().match(/status=(online|offline)/);
@@ -73,5 +73,7 @@ async function getServers(){
     console.error(data.toString());
   });
 }
+(async()=>{
+  getServers()
 
-getServers()
+})()

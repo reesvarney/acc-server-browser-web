@@ -164,12 +164,15 @@ function getServers(isFirst=false){
   const queryString = process.env.QUERYSTRING;
   const authString = process.env.AUTHSTRING;
   ws.on("open", ()=>{
-    console.log("Established websocket connection");
+    console.log(`status=online`);
     ws.send(authString);
     const hex = Buffer.from(queryString, "hex");
     ws.send(hex);
     // TODO: Set status to online
-    console.log(`status=online`);
+  });
+
+  ws.on("close", (data)=>{
+    console.log(`status=unknown`);
   })
   
   ws.on("message", (data)=>{
