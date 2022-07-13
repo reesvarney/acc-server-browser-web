@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import fetch from "node-fetch";
-await mongoose.connect(process.env.DB_URL);
+await mongoose.connect(process.env.DB_URL, { dbName: "acc" });
 import serverSchema from "./models/server.js";
 const server= mongoose.model("Server", serverSchema)
 
@@ -32,7 +32,6 @@ const rain = {
   "00" : false
 }
 
-// todo: add dlc requirements etc so it can be filtered
 const trackData = {
   "barcelona": {
     name: "Barcelona Grand Prix Circuit"
@@ -171,10 +170,6 @@ function getServers(isFirst=false){
     // TODO: Set status to online
   });
 
-  ws.on("close", (data)=>{
-    console.log(`status=unknown`);
-  })
-  
   ws.on("message", (data)=>{
     console.log("Got server hex data");
     const hexString = data.toString('hex');

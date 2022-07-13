@@ -4,8 +4,13 @@ import express from "express";
 import path from "path";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-console.log("connecting to db: " + process.env.DB_URL)
-await mongoose.connect(process.env.DB_URL);
+import { MongoMemoryServer } from 'mongodb-memory-server';
+if(process.env.DB_URL === "memory"){
+  const mongod = await MongoMemoryServer.create();
+  process.env.DB_URL = mongod.getUri();
+}
+console.log("connecting to db: " + process.env.DB_URL);
+await mongoose.connect(process.env.DB_URL, { dbName: "acc" });
 
 import serverSchema from "./models/server.js";
 const models = {
