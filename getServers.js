@@ -232,9 +232,6 @@ function getServers(isFirst=false){
       }
       record.maxDrivers = parseInt(clone.splice(0, 2).join(""), 16);
       record.connectedDrivers = parseInt(clone.splice(0, 2).join(""), 16);
-      if(record.connectedDrivers !== 0){
-        console.log(record.connectedDrivers);
-      }
       record.isFull = (record.maxDrivers == record.connectedDrivers);
       record.misc.push(clone.splice(0, 6).join(""));
       record.conditions = {};
