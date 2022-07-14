@@ -36,26 +36,7 @@ const schema = new mongoose.Schema({
   },
   currentSession: Number,
   isFull: Boolean,
-  extras: {
-    provider: String,
-    discord: String,
-    teamspeak: String,
-    homepage: String,
-    description: String,
-    country: String,
-    broadcast: String,
-    drivers: [
-      {
-        name: String,
-        carNumber: Number,
-        laps: Number,
-        bestLap: Number,
-        car: Number,
-        steamID: String,
-        position: Number,
-      }
-    ],
-  }
+  country_code: String
 },{
   collation: {
     locale : "en",

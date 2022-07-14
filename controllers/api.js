@@ -86,36 +86,5 @@ export default ({models: {server}, kunosStatus })=>{
     res.send(kunosStatus());
   });
 
-  router.post('/enhanced_data/', async(req, res)=> {
-    try{
-      let ip = req.socket.remoteAddress;
-      if(ip === "::1"){
-        ip = localIP;
-      }
-      const id = `${ip}:${req.body.port}`;
-      const data = {
-        extras: {
-          discord: req.body.discord,
-          teamspeak: req.body.teamspeak,
-          homepage: req.body.homepage,
-          description: req.body.description,
-          country: req.body.country,
-          broadcast: req.body.broadcast,
-          drivers: req.body.drivers
-        }
-      };
-      await server.updateOne({
-        id: {
-          $eq: id
-        }
-      }, {
-        $set: data
-      });
-      res.status(200).send("OK");
-    } catch(err){
-      res.status(400).json({error: err.msg});
-    };
-  });
-
   return router;
 };

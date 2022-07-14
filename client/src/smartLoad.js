@@ -93,9 +93,6 @@ export default class{
           }
         }
       };
-      if(server.extras.country === undefined){
-        server.extras.noCountry = true;
-      }
       server.isFavourite = getFavourites().includes(`${server.ip}:${server.port.tcp}`);
       const div =  document.createElement("template");
       div.innerHTML =  this.template(server);

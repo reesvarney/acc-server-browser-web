@@ -148,6 +148,17 @@ async function registerExtendedData(ip){
 
 }
 
+async function getIPLocation(ip){
+  const request = await fetch(`https://ipapi.co/${ip}/country_code`, {
+    method: "GET",
+    timeout: 500,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  return (await request.text()).toLowerCase();
+}
+
 let JSONdata = [];
 function getServers(isFirst=false){
   console.log("Getting server list...");
@@ -221,6 +232,9 @@ function getServers(isFirst=false){
       }
       record.maxDrivers = parseInt(clone.splice(0, 2).join(""), 16);
       record.connectedDrivers = parseInt(clone.splice(0, 2).join(""), 16);
+      if(record.connectedDrivers !== 0){
+        console.log(record.connectedDrivers);
+      }
       record.isFull = (record.maxDrivers == record.connectedDrivers);
       record.misc.push(clone.splice(0, 6).join(""));
       record.conditions = {};
@@ -257,6 +271,7 @@ function getServers(isFirst=false){
       let record = {};
       // ip
       record.ip = getDynamic();
+      record.country_code = await getIPLocation(record.ip);
       if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
         // console.log(record.ip)
         continue;
@@ -279,7 +294,7 @@ function getServers(isFirst=false){
       // record
       record = getMetaLarge(record);
       ids.push(record.id);
-      const pushed = await server.findOneAndUpdate({
+      await server.findOneAndUpdate({
         id: record.id,
       }, {
         $set: record
@@ -287,6 +302,7 @@ function getServers(isFirst=false){
         upsert: true
       });
     }
+
   
     await server.deleteMany({
       id: {
@@ -300,4 +316,5 @@ function getServers(isFirst=false){
 getServers(true)
 const getServerLoop = setInterval(async()=>{
   getServers(false);
-}, 2 * 60 * 1000);
+}, 2 * 60 * 1000 + 2000 + Math.floor(Math.random() * 30000));
+
