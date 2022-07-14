@@ -268,7 +268,8 @@ function getServers(isFirst=false){
       let record = {};
       // ip
       record.ip = getDynamic();
-      record.country_code = await getIPLocation(record.ip);
+      // record.country_code = await getIPLocation(record.ip);
+      record.country_code = "";
       if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
         // console.log(record.ip)
         continue;
