@@ -36,7 +36,7 @@ const schema = new mongoose.Schema({
   },
   currentSession: Number,
   isFull: Boolean,
-  country_code: String
+  country_code: { type: String, default: '' }
 },{
   collation: {
     locale : "en",

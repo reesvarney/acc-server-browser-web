@@ -8,6 +8,8 @@ import { randomBytes } from 'crypto';
 import WebSocket from 'ws';
 import "dotenv/config";
 
+import geoip from "geoip-lite";
+
 const sessionTypes = {
   "00" : "Practice",
   "04" : "Qualifying",
@@ -269,7 +271,6 @@ function getServers(isFirst=false){
       // ip
       record.ip = getDynamic();
       // record.country_code = await getIPLocation(record.ip);
-      record.country_code = "";
       if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
         // console.log(record.ip)
         continue;
@@ -292,13 +293,25 @@ function getServers(isFirst=false){
       // record
       record = getMetaLarge(record);
       ids.push(record.id);
-      await server.findOneAndUpdate({
+      const pushed = await server.findOneAndUpdate({
         id: record.id,
       }, {
         $set: record
       }, {
-        upsert: true
+        upsert: true,
+        new: true
       });
+      if(pushed.country_code === ""){
+        try{
+          const geo = geoip.lookup(pushed.ip);
+          pushed.country_code = geo.country.toLowerCase();
+          pushed.save()
+        } catch(err){
+          pushed.country_code = "un";
+          pushed.save()
+        }
+
+      }
     }
 
   
