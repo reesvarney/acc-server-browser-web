@@ -8,7 +8,7 @@ import { randomBytes } from 'crypto';
 import WebSocket from 'ws';
 import "dotenv/config";
 
-import geoip from "geoip-lite";
+import geoip from "fast-geoip";
 
 const sessionTypes = {
   "00" : "Practice",
@@ -131,37 +131,6 @@ function getTrack(id){
   }
 }
 
-async function registerExtendedData(ip){
-  try {
-    await fetch(`http://${ip}:8953/enhanced_data`, {
-      method: "POST",
-      timeout: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        port: process.env.port || 80
-      })
-    });
-  } catch(err) {
-    // ignore, simply means server does not support it
-    if(!["ETIMEDOUT", "ECONNREFUSED"].includes(err.code)) console.log(err);
-  }
-
-}
-
-async function getIPLocation(ip){
-  const request = await fetch(`https://ipapi.co/${ip}/country_code`, {
-    method: "GET",
-    timeout: 500,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  return (await request.text()).toLowerCase();
-}
-
-let JSONdata = [];
 function getServers(isFirst=false){
   console.log("Getting server list...");
 
@@ -262,10 +231,7 @@ function getServers(isFirst=false){
       return record
     }
 
-    JSONdata = [];
-
     const ids = [];
-
     while(clone.length > 3){
       let record = {};
       // ip
@@ -303,7 +269,7 @@ function getServers(isFirst=false){
       });
       if(pushed.country_code === ""){
         try{
-          const geo = geoip.lookup(pushed.ip);
+          const geo = await geoip.lookup(pushed.ip);
           pushed.country_code = geo.country.toLowerCase();
           pushed.save()
         } catch(err){
