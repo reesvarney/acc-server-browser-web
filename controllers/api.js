@@ -11,7 +11,8 @@ try{
 
 const keyMap = {
   "sa" : ["safetyRating", "requirements.safetyRating"],
-  "tm" : ["trackMedals","requirements.trackMedals"]
+  "tm" : ["trackMedals","requirements.trackMedals"],
+  "cd" : ["connectedDrivers", "connectedDrivers"]
 }
 
 export default ({models: {server}, kunosStatus })=>{
