@@ -90,10 +90,10 @@ export default ({models: {server}, kunosStatus })=>{
         }
       }},
       {
-        $sort: [
-          ["isFavourite", -1],
-          ["connectedDrivers", -1],
-        ]
+        $sort: {
+          isFavourite: -1,
+          connectedDrivers: -1
+        }
       }
     ],
       // Allow it to run better on low-RAM servers
