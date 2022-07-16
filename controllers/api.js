@@ -18,6 +18,7 @@ const keyMap = {
 export default ({models: {server}, kunosStatus })=>{
   router.get('/', async(req, res)=>{
     const queryData = {};
+    let favourites = [];
     if(Object.keys(req.query).length > 0 && req.query.show_full == undefined){
       queryData.isFull = false;
     }
@@ -26,10 +27,13 @@ export default ({models: {server}, kunosStatus })=>{
       queryData.name =  { "$regex": req.query.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "$options": "i" }
     }
 
-    if ("favourites" in req.query) {
-      const favourites = req.query.favourites.split(",").map(a=>a.split(":"));
-      queryData.ip = favourites.map(a=>a[0]);
-      queryData["port.tcp"] = favourites.map(a=>a[1]);
+    if ("favourites" in req.query) { 
+      favourites = req.query.favourites.split(",");
+
+    }
+
+    if ("favourites_only" in req.query) {
+      queryData.id = {$in: favourites};
     }
 
     if(req.query.show_empty == undefined){
@@ -40,14 +44,14 @@ export default ({models: {server}, kunosStatus })=>{
       const split = key.split("_");
       if(key.startsWith("class_")){
         if(queryData.class == undefined){
-          queryData.class = []
+          queryData.class = {$in: []}
         }
-        queryData.class.push(split[1]);
+        queryData.class.$in.push(split[1]);
       } else if(key.startsWith("dlc_")){
         if(queryData["track.dlc"] == undefined){
-          queryData["track.dlc"] = [];
+          queryData["track.dlc"] = {$in: []};
         };
-        queryData["track.dlc"].push(split[1]);
+        queryData["track.dlc"].$in.push(split[1]);
 
       } else if(key.startsWith("session_")){
         if(queryData.sessions == undefined){
@@ -71,14 +75,29 @@ export default ({models: {server}, kunosStatus })=>{
           queryData[keyMap[split[1]][1]].$lte = Number(val);
         }
       }
-    } 
-
-    const data = await server.find(queryData, null,
-      {
-        sort: {
-          connectedDrivers: -1
+    }
+    // const data = await server.find(queryData, null, {sort:
+    //   {connectedDrivers: -1}
+    // });
+    const data = await server.aggregate([
+      {$match: queryData},
+      {$addFields: {
+        isFavourite: {
+          $in: [
+            "$id", 
+            favourites
+          ]
         }
+      }},
+      {
+        $sort: [
+          [isFavourite, -1],
+          [connectedDrivers, -1],
+        ]
       }
+    ],
+      // Allow it to run better on low-RAM servers
+      { allowDiskUse : true }
     );
     res.json(data);
   });

@@ -60,6 +60,7 @@ async function main(){
   });
   
   document.getElementById("filter_favourites").value = (getFavourites()).join(",");
+  document.getElementById("filter_favourites_only").value = (getFavourites()).join(",");
 
   serverList = await new smartLoad("#servers", "#server-template", []);
   update();

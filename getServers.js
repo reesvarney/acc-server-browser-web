@@ -156,6 +156,7 @@ function getServers(isFirst=false){
     console.log("Got server hex data");
     const hexString = data.toString('hex');
     cleanData(hexString);
+    ws.close();
   })
 
   ws.on("error", (err)=>{
@@ -202,7 +203,8 @@ function getServers(isFirst=false){
         record.sessions.push(sessionData);
       }
       record.maxDrivers = parseInt(clone.splice(0, 2).join(""), 16);
-      record.connectedDrivers = parseInt(clone.splice(0, 2).join(""), 16);
+      let conDriverData = clone.splice(0, 2).join("")
+      record.connectedDrivers = parseInt(conDriverData, 16);
       record.isFull = (record.maxDrivers == record.connectedDrivers);
       record.misc.push(clone.splice(0, 6).join(""));
       record.conditions = {};
@@ -247,7 +249,7 @@ function getServers(isFirst=false){
       record.port.tcp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
       record.port.udp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
       
-      record.id = `${record.ip}:${record.port.tcp}`;
+      record.id = (`${record.ip}:${record.port.tcp}`);
       
       record.misc.push(clone.splice(0, 2).join(""));
       // track
