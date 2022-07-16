@@ -91,8 +91,8 @@ export default ({models: {server}, kunosStatus })=>{
       }},
       {
         $sort: [
-          [isFavourite, -1],
-          [connectedDrivers, -1],
+          ["isFavourite", -1],
+          ["connectedDrivers", -1],
         ]
       }
     ],
@@ -101,7 +101,7 @@ export default ({models: {server}, kunosStatus })=>{
     );
     res.json(data);
   }
-  
+
   router.get('/', async(req, res)=>{
     try {
       await queryDb(req, res);
