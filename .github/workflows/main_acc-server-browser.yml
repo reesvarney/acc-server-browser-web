@@ -4,9 +4,6 @@
 name: Build and deploy Node.js app to Azure Web App - acc-server-browser
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
