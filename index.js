@@ -80,5 +80,4 @@ function getServers(){
 }
 (async()=>{
   getServers()
-
 })()

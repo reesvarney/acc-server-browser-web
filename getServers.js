@@ -131,7 +131,10 @@ function getTrack(id){
   }
 }
 
-function getServers(isFirst=false){
+function getServers(){
+  let currentIndex;
+  let rawData;
+
   console.log("Getting server list...");
 
   const ws = new WebSocket('ws://809a.assettocorsa.net:80/kson809','ws', {
@@ -149,18 +152,16 @@ function getServers(isFirst=false){
     ws.send(authString);
     const hex = Buffer.from(queryString, "hex");
     ws.send(hex);
-    // TODO: Set status to online
   });
 
   ws.on("message", (data)=>{
     console.log("Got server hex data");
-    const hexString = data.toString('hex');
-    cleanData(hexString);
+    rawData = data;
+    cleanData();
     ws.close();
   })
 
   ws.on("error", (err)=>{
-    // TODO: Set status to offline
     console.log(`status=offline`);
     console.log(err)
   });
@@ -169,63 +170,78 @@ function getServers(isFirst=false){
     console.log(err)
   })
 
-  async function cleanData(data){
+  function readData(length){
+    const data = rawData.subarray(currentIndex, currentIndex + length);
+    currentIndex += length;
+    return data
+  }
+
+  function readNumber(){
+    const data = rawData.readUInt8(currentIndex);
+    currentIndex += 1;
+    return data
+  }
+
+  function readString(length){
+    return readData(length).toString("utf-8")
+  }
+
+  function readHexPair(){
+    return readData(1).toString("hex")
+  }
+
+  function readDynamicString(){
+    const nextLength = readNumber();
+    const compstring = readString(nextLength);
+    return compstring
+  }
+
+  async function cleanData(){
+    currentIndex = 200;
+    const start = Date.now();
     console.log("Cleaning data")
-    let clone = data.slice(200).split('');
-  
-    function getDynamic(){
-      // Length signifier
-      const removedPair = clone.splice(0, 2);
-      const nextLength = parseInt(removedPair.join(""), 16) * 2;
-  
-      // Extract by length
-      const removedData = clone.splice(0, nextLength);
-      const compstring = Buffer.from(removedData.join(""), "hex").toString("utf-8");
-      return compstring
-    }
   
     function getMetaLarge(record){
-      record.misc.push(clone.splice(0, 4).join(""));
-      record.class = classes[clone.splice(0, 2).join("")];
-      record.misc.push(clone.splice(0, 20).join(""));
-      record.hotjoin = standard_bool[clone.splice(0, 2).join("")];
-      record.misc.push(clone.splice(0, 2).join(""));
+      record.misc.push(readData(2));
+      record.class = classes[readHexPair()];
+      record.misc.push(readData(10));
+      record.hotjoin = standard_bool[readHexPair()];
+      record.misc.push(readData(1));
   
-      record.numOfSessions = parseInt(clone.splice(0, 2).join(""), 16);
+      record.numOfSessions = readNumber();
       record.sessions = [];
       for(let i = 0; i < record.numOfSessions; i++){
         const sessionData = {};
-        sessionData["type"] = sessionTypes[clone.splice(0, 2).join("")];
-        const time1 = parseInt(clone.splice(0, 2).join(""), 16);
-        const time2 = (parseInt(clone.splice(0, 2).join(""), 16) * 256);
+        sessionData["type"] = sessionTypes[readHexPair()];
+        const time1 = readNumber();
+        const time2 = readNumber() * 256;
         sessionData["time"] = time1 + time2;
         sessionData["active"] = false;
         record.sessions.push(sessionData);
       }
-      record.maxDrivers = parseInt(clone.splice(0, 2).join(""), 16);
-      let conDriverData = clone.splice(0, 2).join("")
-      record.connectedDrivers = parseInt(conDriverData, 16);
+      record.maxDrivers = readNumber();
+      record.connectedDrivers = readNumber();
       record.isFull = (record.maxDrivers == record.connectedDrivers);
-      record.misc.push(clone.splice(0, 6).join(""));
+      record.misc.push(readData(3));
       record.conditions = {};
-      record.conditions.rain = rain[(clone.splice(0, 2).join(""))];
+      record.conditions.rain = rain[readHexPair()];
       // This has got something to do with cloud cover however it only seems to affect it when rain is also enabled?
       // Don't know how rain intensity is communicated when it seems to be true/ false though maybe we're looking at the wrong value
       // Maybe some of the data is for a forecast?
-      const tempVal = clone.splice(0, 2).join("");
+      const tempVal = readHexPair();
       record.misc.push(tempVal);
-      record.conditions.night = standard_bool[(clone.splice(0, 2).join(""))];
-      record.conditions.variability = parseInt(clone.splice(0, 2).join(""), 16);
+      record.conditions.night = standard_bool[readHexPair()];
+      record.conditions.variability = readNumber();
   
       record.requirements = {};
-      record.requirements.trackMedals = parseInt(clone.splice(0, 2).join(""), 16);
-      record.requirements.safetyRating = parseInt(clone.splice(0, 2).join(""), 16);
+      record.requirements.trackMedals = readNumber();
+      record.requirements.safetyRating = readNumber();
       if(record.requirements.safetyRating == 255){
         record.requirements.safetyRating = 0;
       }
-      record.misc.push(clone.splice(0, 16).join(""));
+      record.misc.push(readData(8));
   
-      record.currentSession = parseInt(clone.splice(0, 2).join(""), 16);
+      record.currentSession = readNumber();
       if(record.currentSession < record.sessions.length){
         record.sessions[record.currentSession].active = true;
       }
@@ -234,61 +250,62 @@ function getServers(isFirst=false){
     }
 
     const ids = [];
-    while(clone.length > 3){
+    while(rawData.length - currentIndex > 3){
       let record = {};
       // ip
-      record.ip = getDynamic();
-      // record.country_code = await getIPLocation(record.ip);
+      record.ip = readDynamicString();
       if(!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(record.ip)){
-        // console.log(record.ip)
         continue;
       }
       // unknown?
       record.misc = [];
       record.port = {};
-      record.port.tcp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
-      record.port.udp = parseInt(clone.splice(0, 2).join(""), 16) + parseInt(clone.splice(0, 2).join(""), 16) * 256;
+      record.port.tcp = readNumber() + readNumber() * 256;
+      record.port.udp = readNumber() + readNumber() * 256;
       
       record.id = (`${record.ip}:${record.port.tcp}`);
       
-      record.misc.push(clone.splice(0, 2).join(""));
+      record.misc.push(readData(1));
       // track
-      const trackId = getDynamic();
+      const trackId = readDynamicString();
       record.track = getTrack(trackId);
       record.track.id = trackId;
       // server name
-      record.name = getDynamic();
+      record.name = readDynamicString();
       // record
       record = getMetaLarge(record);
       ids.push(record.id);
-      const pushed = await server.findOneAndUpdate({
-        id: record.id,
-      }, {
-        $set: record
-      }, {
-        upsert: true,
-        new: true
-      });
-      if(pushed.country_code === ""){
-        try{
-          const geo = await geoip.lookup(pushed.ip);
-          pushed.country_code = geo.country.toLowerCase();
-          pushed.save()
-        } catch(err){
-          pushed.country_code = "un";
-          pushed.save()
+
+      // Hope this will be less blocking
+      (async()=>{
+        const pushed = await server.findOneAndUpdate({
+          id: record.id,
+        }, {
+          $set: record
+        }, {
+          upsert: true,
+          new: true
+        });
+        if(pushed.country_code === ""){
+          try{
+            const geo = await geoip.lookup(pushed.ip);
+            pushed.country_code = geo.country.toLowerCase();
+            pushed.save()
+          } catch(err){
+            pushed.country_code = "un";
+            pushed.save()
+          }
         }
-
-      }
+      })()
     }
-
-  
-    await server.deleteMany({
+    console.log("Got server list!");
+    const timeTaken = Date.now() - start;
+    console.log(`Completed in ${timeTaken} ms`);
+    server.deleteMany({
       id: {
         $nin: ids
       }
     });
-    console.log("Got server list!");
   }
 }
 
