@@ -72,9 +72,12 @@ function update(){
 }
 
 async function updateServers(){
+  const spinner= document.getElementById("spinner");
+  spinner.style.display = "flex";
   const data = new FormData(document.getElementById("filters"));
   const res = await fetch(`/servers?${new URLSearchParams(data).toString()}`);
   const resJSON = await res.json();
+  spinner.style.display = "none";
   serverList.replaceData(resJSON)
 }
 
