@@ -1,13 +1,9 @@
 "use strict";
+import getServers from "./getServers.js";
+let getServerPromise;
+let lastCheck = 0;
 import express from "express";
 const router = express.Router();
-import fetch from 'node-fetch';
-let localIP = "";
-try{
-  localIP = (await (await fetch('https://api.ipify.org?format=json')).json()).ip
-} catch(err){
-  console.error("Could not get server IP")
-}
 
 const keyMap = {
   "sa" : ["safetyRating", "requirements.safetyRating"],
@@ -15,7 +11,7 @@ const keyMap = {
   "cd" : ["connectedDrivers", "connectedDrivers"]
 }
 
-export default ({models: {server}, kunosStatus })=>{
+export default ({models: {server} })=>{
   async function queryDb(req, res){
     const queryData = {};
     let favourites = [];
@@ -103,6 +99,11 @@ export default ({models: {server}, kunosStatus })=>{
   }
 
   router.get('/', async(req, res)=>{
+    if(Date.now() - lastCheck > 2 * 60 * 1000){
+      lastCheck = Date.now();
+      getServerPromise = getServers(server);
+    }
+    await getServerPromise;
     try {
       await queryDb(req, res);
     } catch(err) {
@@ -112,7 +113,11 @@ export default ({models: {server}, kunosStatus })=>{
   });
 
   router.get('/status', async(req, res)=> {
-    res.send(kunosStatus());
+    if(Date.now() - lastCheck > 2 * 60 * 1000){
+      lastCheck = Date.now();
+      getServerPromise = getServers(server);
+    }
+    res.send(await getServerPromise);
   });
 
   return router;
