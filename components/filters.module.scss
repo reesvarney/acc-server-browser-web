@@ -1,0 +1,103 @@
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0px;
+
+  >*:not(.filter_search) {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .filters_main {
+    display: flex;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    align-self: stretch;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+
+    .filter_group{
+      display: table;
+      border-spacing: 10px 0px;    
+      
+      >* {
+        display: table-row;
+        >*{
+          display: table-cell;
+        }
+      }
+      .filter_group_name{
+        display: table-row;
+        font-weight: 700;
+        column-span: all;
+      }
+    }
+  }
+  
+  .filter_search{
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+
+    input {
+      width: auto;
+      max-width: auto;
+      flex-grow: 1;
+      color: white;
+      font-size: 1.5em;
+      padding: 5px;
+      border-radius: 10px;
+      border-width: 2px;
+      min-width: 0px;
+    }
+  }
+}
+
+.filter_search input:focus{
+  outline: none;
+  border-color: #ffff;
+}
+
+.button_area{
+  margin-left: auto;
+  justify-self: flex-end;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 10px;
+
+  * {
+    padding: 5px 10px;
+    font-weight: 500;
+  }
+}
+
+#show_filters {
+  display: block;
+  font-size: 1.1em;
+  padding: 0px 20px;
+  box-shadow: inset 0 0 0 5px #1b1b1b;
+}
+
+#update_button{
+  padding: 5px 10px;
+  font-size: 1.1em;
+}
+
+#hide_filters {
+  padding: 5px 10px;
+  font-size: 1.1em;
+  background: none;
+  box-shadow: inset 0 0 0 2px white;
+  margin-right: 6px;
+}
+
+#hide_filters:hover {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.712);
+}

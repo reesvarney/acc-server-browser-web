@@ -1,0 +1,23 @@
+
+.servers{
+  box-sizing: content-box;
+  padding: 0px;
+  margin: 0px;
+  display: block;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+}
+
+.servers>tbody{
+  display: table;
+  width: 100%;
+  border-spacing: 0px 2px;
+}
+
+.table_container {
+  max-height: 100%;
+  overflow: hidden;
+  flex-grow: 1;
+}

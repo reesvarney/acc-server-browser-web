@@ -1,0 +1,156 @@
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a:not(.link) {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+html {
+  min-height: 0px;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+body{
+  padding: 0px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  box-sizing: content-box;
+  margin: 0px;
+  overflow: hidden;
+}
+
+.background{
+  position: fixed;
+  min-width: 110vw;
+  min-height: 110vh;
+  top: -5vh;
+  left: -5vw;
+  z-index: -1;
+  filter: brightness(80%) blur(2px);
+
+  :global(*){
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+input {
+  background: black;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  outline: none;
+}
+
+button, .btn {
+  box-shadow: none;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  cursor: pointer;
+  background: black;
+  padding: 10px 20px;
+  font-weight: 700;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100vh;
+  overflow: hidden;
+  max-height: 100vh;
+}
+
+#spinner {
+  // flex
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  gap: 50px;
+}
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: min(50vw, 50vh);
+  height: min(50vw, 50vh);
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: min(50vw, 50vh);
+  height: min(50vw, 50vh);
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.grey-text {
+  color: #aaa;
+}

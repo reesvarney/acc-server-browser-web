@@ -1,0 +1,62 @@
+.banner {
+  background: rgba(10, 10, 10, 0.8);
+  padding: 10px 20px;
+  backdrop-filter: blur(15px);
+
+  h1 {
+    margin: 0px;
+    margin-bottom: 10px;
+  }
+  
+  &>.flex_row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    >:first-of-type{
+      flex-grow: 2;
+    }
+
+    >*{
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .refresh_button {
+      font-size: 1.1em;
+    }
+    
+  }
+
+  .news_container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    justify-content: space-between;
+    background-color: rgba(#FFFFFF, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  
+  .status_area {
+    font-size: 1.1em;
+    
+    .kunos_status {
+      font-weight: bold;
+      padding-left: 1em;
+      text-transform: capitalize;
+      color: red;
+      &.online {
+        color: green;
+      }
+    }
+  }
+
+}

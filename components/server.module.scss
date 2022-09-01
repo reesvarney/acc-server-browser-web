@@ -1,0 +1,147 @@
+.server {
+  background-color: rgba(5,5,5,0.9);
+
+  &:nth-child(2n) {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+}
+
+.server>*{
+  vertical-align: middle;
+  border: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.server_name {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.server_favourite{
+  font-size: 1.8em;
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+.server_favourite_icon{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.server_favourite_icon:hover{
+  color: #ddd;
+}
+
+.server_ip{
+  margin-right: 20px;
+}
+
+.flag * {
+  max-height: 30px;
+  max-width: 50px;
+  font-size: 2em;
+}
+
+.sessions{
+  margin-right: 20px;
+}
+
+.session{
+  display: inline-block;
+  background-color: #494949;
+  color: rgb(255, 255, 255);
+  padding: 5px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
+
+.session.active{
+  background-color: #fafafa;
+  color: black
+}
+
+/* CONDITIONS */
+.conditions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 2em;
+}
+.conditions_icon {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.conditions_variability {
+  box-sizing: content-box;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  transform: rotate(270deg);
+  width: 60px;
+  height: 20px;
+  overflow: hidden;
+  background-color: rgba(0,0,0,0.1);
+}
+.conditions_variability::-webkit-progress-bar {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.conditions_variability::-webkit-progress-value {
+  background-color: rgb(255, 198, 42);
+}
+
+.server_class {
+  padding: 3px 7px;
+  margin-top: 5px;
+  justify-self: flex-start;
+  min-width: 0px;
+  width: fit-content;
+  font-weight: 600;
+}
+
+.server_class.GT3{
+  background-color: #464646;
+  color: white;
+}
+
+.server_class.GT4{
+  color: white;
+  background-color: rgb(33, 40, 105);
+}
+
+.server_class.GTC{
+  color: white;
+  background-color: rgb(255, 136, 0);
+}
+
+.server_class.Mixed{
+  background-color: white;
+  color: black;
+}
+
+.server_class.TCX{
+  background-color: rgb(1, 135, 168);
+  color: rgb(255, 255, 255);
+}
+
+.server_copy {
+  font-size: 1.8em;
+  height: 100%;
+  padding-left: 20px;
+  width:0.1%;
+  white-space: nowrap;
+}
+
+.server_copy i {
+  cursor: pointer;
+}
