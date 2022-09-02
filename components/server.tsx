@@ -45,7 +45,7 @@ export const Server = ({
   return (
     <tr className={styles.server}>
       <td className={styles.server_copy} onClick={()=>{
-        navigator.clipboard.writeText(data.name)
+        navigator.clipboard.writeText(data.name ?? "")
       }}>
         <FontAwesomeIcon icon={faCopy} />
       </td>
