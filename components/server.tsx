@@ -38,14 +38,15 @@ export const Server = ({
       </div>
     );
   }
-  console.log(data.isFavourite, isFavourite);
   useEffect(() => {
     isRendered();
     isRendered = ()=>{};
   });
   return (
     <tr className={styles.server}>
-      <td className={styles.server_copy}>
+      <td className={styles.server_copy} onClick={()=>{
+        navigator.clipboard.writeText(data.name)
+      }}>
         <FontAwesomeIcon icon={faCopy} />
       </td>
       {/* <i className="far fa-copy" onclick="navigator.clipboard.writeText(`{{name}}`)" /> */}

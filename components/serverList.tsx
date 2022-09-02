@@ -9,8 +9,10 @@ import {
 import DataContext from "./dataContext";
 import { Server } from "./server";
 import styles from "./serverList.module.scss";
+import { event } from "nextjs-google-analytics";
+
 let currentIndex = 0;
-let lastFilters: filterType | {} = null;
+let lastFilters: filterType = null;
 
 export const ServerList = ({setStatus} : {setStatus: Function}) => {
   const ctx = useContext(DataContext);
@@ -135,21 +137,25 @@ export const ServerList = ({setStatus} : {setStatus: Function}) => {
     }
   }, [servers]);
 
-  async function getServers(filters: filterType | {} = null) {
+  async function getServers(filters: filterType = null) {
+    event("get_servers", {
+      category: "general",
+      ...(filters && "search" in filters && {label: filters.search})
+    });
     if(!filters){
       if(lastFilters){
         filters = lastFilters
       }
     } else {
-      lastFilters = filters;
+      lastFilters = {...filters, ...{search: ""}};
     }
     currentIndex = 0;
     setLoadedData(null);
     filters = {
       ...filters,
       ...{favourites: JSON.parse(localStorage.getItem("favourites") || "[]") as Array<string>}
-    };
-    const urlData = new URLSearchParams(filters ?? {}).toString();
+    } as filterType;
+    const urlData = new URLSearchParams(filters as {[key: string]: any}).toString();
     const data = (await (
       await fetch("/api/servers?" + urlData)
     ).json()) as {servers: Array<ServerType>, status: string};
