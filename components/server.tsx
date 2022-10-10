@@ -24,6 +24,9 @@ export const Server = ({
   const ctx = useContext(DataContext);
   const sessionEls = [];
   const [isFavourite, setFavourite] = useState<boolean>(data.isFavourite);
+
+  const tested = data.name?.replace(/(?:https:\/\/|http:\/\/)?discord\.gg\/([A-Za-z0-9]*?)(?:\s|$)/gm, "<a href='https://discord.gg/$1'>$&</a>");
+  const name = (tested === undefined || data.name === tested) ? <span>{data.name}</span> : <span dangerouslySetInnerHTML={{__html: tested}} />;
   for (const [i, session] of data.sessions.entries()) {
     sessionEls.push(
       <div
@@ -69,7 +72,7 @@ export const Server = ({
       </td>
 
       <td className="flex-col">
-        <div className={styles.server_name}>{data.name}</div>
+        <div className={styles.server_name}>{name}</div>
         <div className="sessions">{sessionEls}</div>
         <div className="requirements">
           <span className="grey-text">REQUIREMENTS:</span>

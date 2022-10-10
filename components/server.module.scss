@@ -17,6 +17,15 @@
 .server_name {
   margin-bottom: 10px;
   font-size: 1.2em;
+
+  a {
+    color: rgb(0, 157, 205);
+
+    &:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
 }
 
 .server_favourite{
