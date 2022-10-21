@@ -15,7 +15,7 @@ import DataContext from "./dataContext";
 export const Server = ({
   data,
   isRendered,
-  serverId
+  serverId,
 }: {
   data: ServerType;
   isRendered: Function;
@@ -25,16 +25,17 @@ export const Server = ({
   const sessionEls = [];
   const [isFavourite, setFavourite] = useState<boolean>(data.isFavourite);
 
-  const tested = data.name?.replace(/(?:https:\/\/|http:\/\/)?discord\.gg\/([A-Za-z0-9]*?)(?:\s|$)/gm, "<a href='https://discord.gg/$1'>$&</a>");
-  const name = (tested === undefined || data.name === tested) ? <span>{data.name}</span> : <span dangerouslySetInnerHTML={{__html: tested}} />;
+  const split = data.name?.split(
+    /((?:https:\/\/|http:\/\/)?discord\.(?:gg|com\/invite)\/([A-Za-z0-9]*?)(?:\s|$))/gm
+  );
+
   for (const [i, session] of data.sessions.entries()) {
     sessionEls.push(
       <div
         className={[
           styles.session,
-          ... session.active ? [styles.active]: [],
+          ...(session.active ? [styles.active] : []),
         ].join(" ")}
-
         key={`${serverId}_session_${i}`}
       >
         {session.type}: {session.time}
@@ -43,26 +44,32 @@ export const Server = ({
   }
   useEffect(() => {
     isRendered();
-    isRendered = ()=>{};
+    isRendered = () => {};
   });
   return (
     <tr className={styles.server}>
-      <td className={styles.server_copy} onClick={()=>{
-        navigator.clipboard.writeText(data.name ?? "")
-      }}>
+      <td
+        className={styles.server_copy}
+        onClick={() => {
+          navigator.clipboard.writeText(data.name ?? "");
+        }}
+      >
         <FontAwesomeIcon icon={faCopy} />
       </td>
       {/* <i className="far fa-copy" onclick="navigator.clipboard.writeText(`{{name}}`)" /> */}
       <td className={styles.server_favourite}>
-        <div className={styles.server_favourite_icon} onClick={()=>{
-          if(data.isFavourite){
-            ctx.removeFavourite(data.id ?? "")
-          } else {
-            ctx.addFavourite(data.id ?? "")
-          }
-          data.isFavourite = !data.isFavourite;
-          setFavourite(data.isFavourite);
-        }}>
+        <div
+          className={styles.server_favourite_icon}
+          onClick={() => {
+            if (data.isFavourite) {
+              ctx.removeFavourite(data.id ?? "");
+            } else {
+              ctx.addFavourite(data.id ?? "");
+            }
+            data.isFavourite = !data.isFavourite;
+            setFavourite(data.isFavourite);
+          }}
+        >
           {isFavourite ? (
             <FontAwesomeIcon icon={faStar} />
           ) : (
@@ -72,7 +79,27 @@ export const Server = ({
       </td>
 
       <td className="flex-col">
-        <div className={styles.server_name}>{name}</div>
+        <div className={styles.server_name}>
+          {split?.length === 1
+            ? data.name
+            : split?.map((txt, i) => {
+                switch (i % 3) {
+                  case 0:
+                    return txt;
+                  case 1:
+                    return (
+                      <a
+                        key={data.id + "_name" + i}
+                        href={`https://discord.gg/${split[i + 1]}`}
+                      >
+                        {txt}
+                      </a>
+                    );
+                  default:
+                    return null;
+                }
+              })}
+        </div>
         <div className="sessions">{sessionEls}</div>
         <div className="requirements">
           <span className="grey-text">REQUIREMENTS:</span>
@@ -106,7 +133,12 @@ export const Server = ({
       </td>
       <td className={styles.server_track}>
         <div className={styles.server_track_name}>{data.track?.name}</div>
-        <div className={[styles.server_class, data.class && styles[data.class]].join(" ")}>
+        <div
+          className={[
+            styles.server_class,
+            data.class && styles[data.class],
+          ].join(" ")}
+        >
           {data.class}
         </div>
       </td>
