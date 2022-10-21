@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCopy,
@@ -150,6 +151,7 @@ export const Server = ({
         <img
           src={`https://flagcdn.com/${data.country_code}.svg`}
           height="auto"
+          alt={`${data.country_code} country flag`}
         />
       </td>
       {/* <img src="/img/tracks/{{track.id}}.jpg" class="track-image"> */}
