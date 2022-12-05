@@ -27,7 +27,7 @@ export const Server = ({
   const [isFavourite, setFavourite] = useState<boolean>(data.isFavourite);
 
   const split = data.name?.split(
-    /((?:https:\/\/|http:\/\/)?discord\.(?:gg|com\/invite)\/([A-Za-z0-9]*?)(?:\s|$))/gm
+    /((?:https:\/\/|http:\/\/)?(?:www\.)?discord\.(?:gg|com\/invite)\/([A-Za-z0-9]*?)(?:\s|$))/gm
   );
 
   for (const [i, session] of data.sessions.entries()) {
@@ -79,7 +79,7 @@ export const Server = ({
         </div>
       </td>
 
-      <td className="flex-col">
+      <td >
         <div className={styles.server_name}>
           {split?.length === 1
             ? data.name
@@ -102,13 +102,13 @@ export const Server = ({
               })}
         </div>
         <div className="sessions">{sessionEls}</div>
-        <div className="requirements">
+        <div className={styles.requirements}>
           <span className="grey-text">REQUIREMENTS:</span>
           <span className="requirements-track-medals">
             Track Medals: {data.requirements?.trackMedals}
           </span>
           <span className="requirements-sa">
-            SA: {data.requirements?.safetyRating}
+            Safety Rating: {data.requirements?.safetyRating}
           </span>
         </div>
       </td>
@@ -154,7 +154,6 @@ export const Server = ({
           alt={`${data.country_code} country flag`}
         />
       </td>
-      {/* <img src="/img/tracks/{{track.id}}.jpg" class="track-image"> */}
       {/* <i class="fas fa-globe"></i> */}
     </tr>
   );

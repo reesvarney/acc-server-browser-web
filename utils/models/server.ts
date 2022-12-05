@@ -9,7 +9,8 @@ const schema = new mongoose.Schema({
   track: {
     name: String,
     id: String,
-    dlc: String
+    dlc: String,
+    image: String
   },
   name: String,
   class: String,
@@ -37,7 +38,7 @@ const schema = new mongoose.Schema({
   },
   currentSession: Number,
   isFull: Boolean,
-  country_code: { type: String, default: '' }
+  country_code: { type: String, default: '' },
 },{
   collation: {
     locale : "en",

@@ -1,12 +1,13 @@
 .server {
   background-color: rgba(5,5,5,0.9);
-
-  &:nth-child(2n) {
+  position: relative;
+  overflow: hidden;
+  &:nth-child(2n)  {
     background-color: rgba(0, 0, 0, 0.9);
   }
 }
 
-.server>*{
+.server>*:not(img){
   vertical-align: middle;
   border: none;
   padding-top: 10px;
@@ -153,4 +154,10 @@
 
 .server_copy svg {
   cursor: pointer;
+}
+
+.requirements {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }

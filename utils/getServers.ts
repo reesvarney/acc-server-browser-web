@@ -31,21 +31,26 @@ const trackData: {
   [key: string]: {
     name: string;
     dlc?: string;
+    image?: string;
   };
 } = {
   barcelona: {
     name: "Barcelona Grand Prix Circuit",
+    image: "track-Barcelona"
   },
   mount_panorama: {
     name: "Bathurst - Mount Panorama Circuit",
     dlc: "icgt",
+    image: "int_gt_pack-18"
   },
   brands_hatch: {
     name: "Brands Hatch",
+    image: "track-Brands-Hatch"
   },
   donington: {
     name: "Donington Park",
     dlc: "bgt",
+    image: "9-2"
   },
   hungaroring: {
     name: "Hungaroring",
@@ -53,6 +58,7 @@ const trackData: {
   imola: {
     name: "Imola",
     dlc: "gtwc",
+    image: "track-imola"
   },
   kyalami: {
     name: "Kyalami",
@@ -61,6 +67,7 @@ const trackData: {
   laguna_seca: {
     name: "Laguna Seca",
     dlc: "icgt",
+    image: "int_gt_pack-2"
   },
   misano: {
     name: "Misano",
@@ -74,9 +81,11 @@ const trackData: {
   oulton_park: {
     name: "Oulton Park",
     dlc: "bgt",
+    image: "12-3"
   },
   paul_ricard: {
     name: "Paul Ricard",
+    image: "track-Paul-Ricard"
   },
   silverstone: {
     name: "Silverstone",
@@ -91,6 +100,7 @@ const trackData: {
   suzuka: {
     name: "Suzuka",
     dlc: "icgt",
+    image: "int_gt_pack-3"
   },
   zandvoort: {
     name: "Zandvoort",
@@ -101,14 +111,17 @@ const trackData: {
   watkins_glen: {
     name: "Watkins Glen",
     dlc: "atp",
+    image: "9-2-3"
   },
   cota: {
     name: "Circuit of the Americas",
     dlc: "atp",
+    image: "3-3"
   },
   indianapolis: {
     name: "Indianapolis Motor Speedway",
     dlc: "atp",
+    image: "jp"
   },
 };
 
@@ -116,8 +129,11 @@ function getTrack(id: string) {
   // todo: match legacy naming to current spec, see: https://www.acc-wiki.info/wiki/Racetracks_Overview
   if (id in trackData) {
     const track = trackData[id];
-    if (track.dlc == undefined) {
+    if (!track.dlc) {
       track.dlc = "base";
+    }
+    if(!track.image){
+      track.image = `track-${track.name}`;
     }
     return { ...track, id };
   } else {
@@ -129,6 +145,7 @@ function getTrack(id: string) {
     name: id,
     dlc: "base",
     id,
+    image: ""
   };
 }
 
@@ -294,7 +311,7 @@ function getServers(): Promise<String> {
               requirements,
               currentSession,
               isFull: drivers.max == drivers.connected,
-              country_code
+              country_code,
             },
           });
       }
