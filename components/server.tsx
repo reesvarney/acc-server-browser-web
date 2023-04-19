@@ -25,7 +25,6 @@ export const Server = ({
   const ctx = useContext(DataContext);
   const sessionEls = [];
   const [isFavourite, setFavourite] = useState<boolean>(data.isFavourite);
-
   const split = data.name?.split(
     /((?:https:\/\/|http:\/\/)?(?:www\.)?discord\.(?:gg|com\/invite)\/([A-Za-z0-9]*?)(?:\s|$))/gm
   );

@@ -3,30 +3,6 @@ import WebSocket from "ws";
 import models from "./db";
 import geoip from "geoip-country";
 
-const sessionTypes: { [key: string]: string } = {
-  "00": "Practice",
-  "04": "Qualifying",
-  "0a": "Race",
-};
-
-const classes: { [key: string]: string } = {
-  fa: "Mixed",
-  "00": "GT3",
-  "07": "GT4",
-  f9: "GTC",
-  "0c": "TCX",
-};
-
-const standard_bool: { [key: string]: boolean } = {
-  "01": true,
-  "00": false,
-};
-
-const rain: { [key: string]: boolean } = {
-  "80": true,
-  "00": false,
-};
-
 const trackData: {
   [key: string]: {
     name: string;
@@ -36,21 +12,21 @@ const trackData: {
 } = {
   barcelona: {
     name: "Barcelona Grand Prix Circuit",
-    image: "track-Barcelona"
+    image: "track-Barcelona",
   },
   mount_panorama: {
     name: "Bathurst - Mount Panorama Circuit",
     dlc: "icgt",
-    image: "int_gt_pack-18"
+    image: "int_gt_pack-18",
   },
   brands_hatch: {
     name: "Brands Hatch",
-    image: "track-Brands-Hatch"
+    image: "track-Brands-Hatch",
   },
   donington: {
     name: "Donington Park",
     dlc: "bgt",
-    image: "9-2"
+    image: "9-2",
   },
   hungaroring: {
     name: "Hungaroring",
@@ -58,16 +34,20 @@ const trackData: {
   imola: {
     name: "Imola",
     dlc: "gtwc",
-    image: "track-imola"
+    image: "track-imola",
   },
   kyalami: {
     name: "Kyalami",
     dlc: "icgt",
   },
+  valencia: {
+    name: "Valencia",
+    dlc: "GTWC-2023"
+  },
   laguna_seca: {
     name: "Laguna Seca",
     dlc: "icgt",
-    image: "int_gt_pack-2"
+    image: "int_gt_pack-2",
   },
   misano: {
     name: "Misano",
@@ -81,11 +61,11 @@ const trackData: {
   oulton_park: {
     name: "Oulton Park",
     dlc: "bgt",
-    image: "12-3"
+    image: "12-3",
   },
   paul_ricard: {
     name: "Paul Ricard",
-    image: "track-Paul-Ricard"
+    image: "track-Paul-Ricard",
   },
   silverstone: {
     name: "Silverstone",
@@ -100,7 +80,7 @@ const trackData: {
   suzuka: {
     name: "Suzuka",
     dlc: "icgt",
-    image: "int_gt_pack-3"
+    image: "int_gt_pack-3",
   },
   zandvoort: {
     name: "Zandvoort",
@@ -111,17 +91,17 @@ const trackData: {
   watkins_glen: {
     name: "Watkins Glen",
     dlc: "atp",
-    image: "9-2-3"
+    image: "9-2-3",
   },
   cota: {
     name: "Circuit of the Americas",
     dlc: "atp",
-    image: "3-3"
+    image: "3-3",
   },
   indianapolis: {
     name: "Indianapolis Motor Speedway",
     dlc: "atp",
-    image: "jp"
+    image: "jp",
   },
 };
 
@@ -132,7 +112,7 @@ function getTrack(id: string) {
     if (!track.dlc) {
       track.dlc = "base";
     }
-    if(!track.image){
+    if (!track.image) {
       track.image = `track-${track.name}`;
     }
     return { ...track, id };
@@ -145,7 +125,7 @@ function getTrack(id: string) {
     name: id,
     dlc: "base",
     id,
-    image: ""
+    image: "",
   };
 }
 
@@ -202,12 +182,32 @@ function getServers(): Promise<String> {
       return data;
     }
 
-    function readString(length: number) {
-      return readData(length).toString("utf-8");
+    function readLastBitBoolean() {
+      return readData(1).readInt8() ? true : false;
     }
 
-    function readHexPair() {
-      return readData(1).toString("hex");
+    function readFirstBitBoolean() {
+      return readData(1)[0] === 0x80;
+    }
+
+    function getSessionType() {
+      const data = readData(1)[0];
+      if (data === 0x0a) return "Race";
+      if (data === 0x04) return "Qualifying";
+      if (data === 0x00) return "Practice";
+    }
+
+    function getVehicleClass() {
+      const data = readData(1)[0];
+      if (data === 0xfa) return "Mixed";
+      if (data === 0x00) return "GT3";
+      if (data === 0x07) return "GT4";
+      if (data === 0xf9) return "GTC";
+      if (data === 0x0c) return "TCX";
+    }
+
+    function readString(length: number) {
+      return readData(length).toString("utf-8");
     }
 
     function readDynamicString() {
@@ -217,7 +217,6 @@ function getServers(): Promise<String> {
     }
 
     async function cleanData() {
-      let promises = [];
       currentIndex = 200;
       const start = Date.now();
       const bulk = models.Server.collection.initializeUnorderedBulkOp();
@@ -241,16 +240,16 @@ function getServers(): Promise<String> {
         const track = getTrack(readDynamicString());
         const name = readDynamicString();
         misc.push(readData(2));
-        const vehicleClass = classes[readHexPair()];
+        const vehicleClass = getVehicleClass();
         misc.push(readData(10));
-        const hotjoin = standard_bool[readHexPair()];
+        const hotjoin = readLastBitBoolean();
         misc.push(readData(1));
 
         const numOfSessions = readNumber();
         const sessions = [];
         for (let i = 0; i < numOfSessions; i++) {
           sessions.push({
-            type: sessionTypes[readHexPair()],
+            type: getSessionType(),
             time: readNumber() + readNumber() * 256,
             active: false,
           });
@@ -261,7 +260,7 @@ function getServers(): Promise<String> {
         };
         misc.push(readData(3));
         const conditions = {
-          rain: rain[readHexPair()],
+          rain: readFirstBitBoolean(),
           night: false,
           variability: 0,
         };
@@ -269,7 +268,7 @@ function getServers(): Promise<String> {
         // Don't know how rain intensity is communicated when it seems to be true/ false though maybe we're looking at the wrong value
         // Maybe some of the data is for a forecast?
         misc.push(readData(1));
-        conditions.night = standard_bool[readHexPair()];
+        conditions.night = readLastBitBoolean();
         conditions.variability = readNumber();
 
         const requirements = {
@@ -290,8 +289,8 @@ function getServers(): Promise<String> {
           const geo = await geoip.lookup(ip || "");
           if (!geo) throw new Error("Could not lookup IP");
           country_code = geo.country.toLowerCase();
-        } catch(err) {
-        }
+        } catch (err) {}
+
         bulk
           .find({ id })
           .upsert()
@@ -315,16 +314,17 @@ function getServers(): Promise<String> {
             },
           });
       }
-
+      const timeTaken_1 = Date.now() - start;
+      console.log(`Converted servers in ${timeTaken_1} ms`);
       console.log(`Converted servers to JSON objects`);
-      await bulk.execute();
-      const timeTaken = Date.now() - start;
-      console.log(`Updated ${ids.length} servers in ${timeTaken} ms`);
-      await models.Server.deleteMany({
+      bulk.find({
         id: {
           $nin: ids,
         },
-      });
+      }).delete();
+      await bulk.execute();
+      const timeTaken_2 = Date.now() - start;
+      console.log(`Updated ${ids.length} servers in ${timeTaken_2} ms`);
       resolve("online");
     }
   });

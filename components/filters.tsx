@@ -207,6 +207,16 @@ export const Filters = () => {
             />
           </div>
           <div className={styles.filter}>
+            <label htmlFor="dlc_gtwc-2023">GTWC-2023</label>
+            <input
+              name="dlc"
+              id="dlc_gtwc-2023"
+              type="checkbox"
+              value="gtwc-2023"
+              defaultChecked={filterData?.dlc?.includes("gtwc-2023") ?? true}
+            />
+          </div>
+          <div className={styles.filter}>
             <label htmlFor="dlc_atp">ATP</label>
             <input
               name="dlc"
