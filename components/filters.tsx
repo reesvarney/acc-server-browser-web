@@ -31,22 +31,31 @@ export const Filters = () => {
       showFull: data.get("show_full") == "on" ?? oldData.showFull ?? true,
       class: (data.getAll("class") as Array<string>) ?? oldData.class ?? [],
       dlc: (data.getAll("dlc") as Array<string>) ?? oldData.dlc ?? [],
-      sessions: (data.getAll("session") as Array<string>) ?? oldData.sessions ?? [],
-      favouritesOnly: data.get("favourites_only") == "on" ?? oldData.favouritesOnly ?? false,
+      sessions:
+        (data.getAll("session") as Array<string>) ?? oldData.sessions ?? [],
+      favouritesOnly:
+        data.get("favourites_only") == "on" ?? oldData.favouritesOnly ?? false,
       ...(searchVal && searchVal !== "" && { search: searchVal }),
     };
     setFilterData(newData);
   }
 
-  ctx.addFavourite = (id)=>{
-    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") as Array<string>;
+  ctx.addFavourite = (id) => {
+    const favourites = JSON.parse(
+      localStorage.getItem("favourites") || "[]"
+    ) as Array<string>;
     localStorage.setItem("favourites", JSON.stringify([...favourites, id]));
-  }
+  };
 
-  ctx.removeFavourite = (id)=>{
-    const favourites = JSON.parse(localStorage.getItem("favourites") || "[]") as Array<string>;
-    localStorage.setItem("favourites", JSON.stringify(favourites.filter(a=>a!==id)));
-  }
+  ctx.removeFavourite = (id) => {
+    const favourites = JSON.parse(
+      localStorage.getItem("favourites") || "[]"
+    ) as Array<string>;
+    localStorage.setItem(
+      "favourites",
+      JSON.stringify(favourites.filter((a) => a !== id))
+    );
+  };
 
   useEffect(() => {
     if (filterData) {
@@ -64,8 +73,16 @@ export const Filters = () => {
         max_tm: data["max_tm"] ?? 3,
         showEmpty: data["showEmpty"] ?? false ? true : false,
         showFull: data["showFull"] ?? true ? true : false,
-        class: data["class"] ?? ["mixed", "gt3", "gt4", "gtc", "tcx"],
-        dlc: data["dlc"] ?? ["base", "icgt", "gtwc", "bgt", "atp"],
+        class: data["class"] ?? ["mixed", "gt3", "gt4", "gtc", "tcx", "gt2"],
+        dlc: data["dlc"] ?? [
+          "base",
+          "icgt",
+          "gtwc",
+          "bgt",
+          "atp",
+          "gt2",
+          "nurb-24",
+        ],
         sessions: data["session"] ?? ["race", "qualifying", "practice"],
         favouritesOnly: data["favouritesOnly"] ?? false ? true : false,
       };
@@ -83,11 +100,12 @@ export const Filters = () => {
           </button>
         ) : null}
       </div>
-      <div className={styles.filters_main} style={
-        {
-          display: filtersVisible ? "flex" : "none"
-        }
-      }>
+      <div
+        className={styles.filters_main}
+        style={{
+          display: filtersVisible ? "flex" : "none",
+        }}
+      >
         <div className={styles.filter_group}>
           <span className={styles.filter_group_name}>SA</span>
           <div className={styles.filter}>
@@ -226,6 +244,26 @@ export const Filters = () => {
               defaultChecked={filterData?.dlc?.includes("atp") ?? true}
             />
           </div>
+          <div className={styles.filter}>
+            <label htmlFor="dlc_gt2">GT2</label>
+            <input
+              name="dlc"
+              id="dlc_gt2"
+              type="checkbox"
+              value="gt2"
+              defaultChecked={filterData?.dlc?.includes("gt2") ?? true}
+            />
+          </div>
+          <div className={styles.filter}>
+            <label htmlFor="dlc_nurb-24">NBR 24h</label>
+            <input
+              name="dlc"
+              id="dlc_nurb-24"
+              type="checkbox"
+              value="nurb-24"
+              defaultChecked={filterData?.dlc?.includes("nurb-24") ?? true}
+            />
+          </div>
         </div>
         <div className={styles.filter_group}>
           <span className={styles.filter_group_name}>Class</span>
@@ -278,6 +316,17 @@ export const Filters = () => {
               type="checkbox"
               value="tcx"
               defaultChecked={filterData?.class?.includes("tcx") ?? true}
+            />
+          </div>
+          <div className={styles.filter}>
+            <label htmlFor="class_gt2">GT2</label>
+
+            <input
+              name="class"
+              id="class_gt2"
+              type="checkbox"
+              value="gt2"
+              defaultChecked={filterData?.class?.includes("gt2") ?? true}
             />
           </div>
         </div>
@@ -355,7 +404,9 @@ export const Filters = () => {
             name="favourites"
             id="filter_favourites"
             type="hidden"
-            defaultValue={`[${filterData?.favourites?.map(a=>`"${a}"`)}]` ?? "[]"}
+            defaultValue={
+              `[${filterData?.favourites?.map((a) => `"${a}"`)}]` ?? "[]"
+            }
           />
         </div>
 

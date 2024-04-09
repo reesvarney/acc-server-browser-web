@@ -1,13 +1,13 @@
 .server {
-  background-color: rgba(5,5,5,0.9);
+  background-color: rgba(5, 5, 5, 0.9);
   position: relative;
   overflow: hidden;
-  &:nth-child(2n)  {
+  &:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.9);
   }
 }
 
-.server>*:not(img){
+.server > *:not(img) {
   vertical-align: middle;
   border: none;
   padding-top: 10px;
@@ -29,14 +29,14 @@
   }
 }
 
-.server_favourite{
+.server_favourite {
   font-size: 1.8em;
   height: 100%;
   padding-left: 20px;
   padding-right: 10px;
 }
 
-.server_favourite_icon{
+.server_favourite_icon {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -44,11 +44,11 @@
   cursor: pointer;
 }
 
-.server_favourite_icon:hover{
+.server_favourite_icon:hover {
   color: #ddd;
 }
 
-.server_ip{
+.server_ip {
   margin-right: 20px;
 }
 
@@ -58,11 +58,11 @@
   font-size: 2em;
 }
 
-.sessions{
+.sessions {
   margin-right: 20px;
 }
 
-.session{
+.session {
   display: inline-block;
   background-color: #494949;
   color: rgb(255, 255, 255);
@@ -72,9 +72,9 @@
   margin-right: 10px;
 }
 
-.session.active{
+.session.active {
   background-color: #fafafa;
-  color: black
+  color: black;
 }
 
 /* CONDITIONS */
@@ -100,10 +100,10 @@
   width: 60px;
   height: 20px;
   overflow: hidden;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .conditions_variability::-webkit-progress-bar {
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .conditions_variability::-webkit-progress-value {
@@ -119,36 +119,39 @@
   font-weight: 600;
 }
 
-.server_class.GT3{
+.server_class.GT3 {
   background-color: #464646;
   color: white;
 }
 
-.server_class.GT4{
+.server_class.GT4 {
   color: white;
   background-color: rgb(33, 40, 105);
 }
 
-.server_class.GTC{
+.server_class.GTC {
   color: white;
   background-color: rgb(255, 136, 0);
 }
 
-.server_class.Mixed{
+.server_class.Mixed {
   background-color: white;
   color: black;
 }
 
-.server_class.TCX{
+.server_class.TCX {
   background-color: rgb(1, 135, 168);
   color: rgb(255, 255, 255);
 }
-
+.server_class.GT2 {
+  background-color: rgb(213, 75, 0);
+  color: rgb(255, 255, 255);
+}
 .server_copy {
   font-size: 1.8em;
   height: 100%;
   padding-left: 20px;
-  width:0.1%;
+  width: 0.1%;
   white-space: nowrap;
 }
 

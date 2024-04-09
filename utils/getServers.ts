@@ -42,7 +42,7 @@ const trackData: {
   },
   valencia: {
     name: "Valencia",
-    dlc: "GTWC-2023"
+    dlc: "GTWC-2023",
   },
   laguna_seca: {
     name: "Laguna Seca",
@@ -103,6 +103,14 @@ const trackData: {
     dlc: "atp",
     image: "jp",
   },
+  nurburgring_24h: {
+    name: "Nurburgring 24h",
+    dlc: "nurb-24",
+  },
+  red_bull_ring: {
+    name: "Red Bull Ring",
+    dlc: "gt2",
+  },
 };
 
 function getTrack(id: string) {
@@ -133,6 +141,7 @@ function getServers(): Promise<String> {
   return new Promise((resolve) => {
     let currentIndex = 0;
     let rawData: Buffer;
+    let got_response = false;
 
     console.log("Getting server list");
     const ws = new WebSocket("ws://809a.assettocorsa.net:80/kson809", "ws", {
@@ -149,14 +158,24 @@ function getServers(): Promise<String> {
     const queryString = process.env.QUERYSTRING ?? "";
     const authString = process.env.AUTHSTRING ?? "";
     ws.on("open", () => {
+      console.log("Websocket connection established");
       ws.send(authString);
       const hex = Buffer.from(queryString, "hex");
       ws.send(hex);
+      console.log("Sent query string");
+      setTimeout(() => {
+        if (!got_response) {
+          ws.close();
+          resolve("offline");
+          console.log("No response from server");
+        }
+      }, 1000);
     });
 
     ws.on("message", (data: Buffer) => {
       console.log("Received binary data");
       rawData = data;
+      got_response = true;
       cleanData();
       ws.close();
     });
@@ -195,6 +214,8 @@ function getServers(): Promise<String> {
       if (data === 0x0a) return "Race";
       if (data === 0x04) return "Qualifying";
       if (data === 0x00) return "Practice";
+      console.log(`Unknown session type: ${data}`);
+      return "Unknown";
     }
 
     function getVehicleClass() {
@@ -204,6 +225,9 @@ function getServers(): Promise<String> {
       if (data === 0x07) return "GT4";
       if (data === 0xf9) return "GTC";
       if (data === 0x0c) return "TCX";
+      if (data === 0x0b) return "GT2";
+      console.log(`Unknown vehicle class: ${data}`);
+      return "Unknown";
     }
 
     function readString(length: number) {
@@ -217,10 +241,9 @@ function getServers(): Promise<String> {
     }
 
     async function cleanData() {
-      currentIndex = 200;
+      currentIndex = 122;
       const start = Date.now();
       const bulk = models.Server.collection.initializeUnorderedBulkOp();
-
       const ids = [];
       while (rawData.length - currentIndex > 3) {
         // ip
@@ -289,7 +312,9 @@ function getServers(): Promise<String> {
           const geo = await geoip.lookup(ip || "");
           if (!geo) throw new Error("Could not lookup IP");
           country_code = geo.country.toLowerCase();
-        } catch (err) {}
+        } catch (err) {
+          console.log(err);
+        }
 
         bulk
           .find({ id })
@@ -317,11 +342,13 @@ function getServers(): Promise<String> {
       const timeTaken_1 = Date.now() - start;
       console.log(`Converted servers in ${timeTaken_1} ms`);
       console.log(`Converted servers to JSON objects`);
-      bulk.find({
-        id: {
-          $nin: ids,
-        },
-      }).delete();
+      bulk
+        .find({
+          id: {
+            $nin: ids,
+          },
+        })
+        .delete();
       await bulk.execute();
       const timeTaken_2 = Date.now() - start;
       console.log(`Updated ${ids.length} servers in ${timeTaken_2} ms`);
