@@ -98,10 +98,13 @@ export const Filters = () => {
   }, [filterData]);
 
   const selectAllTracks = () => {
-    loadFilters({ track: Object.keys(staticData.tracks) })
+    let tracks = Object.keys(staticData.tracks);
+    localStorage.setItem("filters", JSON.stringify(tracks))
+    loadFilters({ track: tracks})
   }
 
   const selectNoneTracks = () => {
+    localStorage.setItem("filters", "{}")
     loadFilters({ track: [] })
   }
 
