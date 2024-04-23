@@ -53,6 +53,13 @@ const filterInput = z
         return a.split(",") || [];
       })
       .optional(),
+    track: z
+      .string()
+      .regex(/.*/)
+      .transform((a) => {
+          return a.split(",") || [];
+      })
+      .optional(),
     sessions: z
       .string()
       .regex(/.*/)
@@ -126,6 +133,11 @@ export default async function handler(
     ...(input?.dlc && {
       "track.dlc": {
         $in: input.dlc,
+      },
+    }),
+    ...(input?.track && {
+      "track.id": {
+        $in: input.track,
       },
     }),
     ...(input?.class && {

@@ -2,6 +2,7 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import styles from "./filters.module.scss";
 import DataContext from "./dataContext";
 import { filterType } from "$pages/api/servers";
+import staticData from "$utils/staticData";
 export const Filters = () => {
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterData, setFilterData] = useState<filterType>(null);
@@ -31,6 +32,7 @@ export const Filters = () => {
       showFull: data.get("show_full") == "on" ?? oldData.showFull ?? true,
       class: (data.getAll("class") as Array<string>) ?? oldData.class ?? [],
       dlc: (data.getAll("dlc") as Array<string>) ?? oldData.dlc ?? [],
+      track: (data.getAll("track") as Array<string>) ?? oldData.track ?? [],
       sessions:
         (data.getAll("session") as Array<string>) ?? oldData.sessions ?? [],
       favouritesOnly:
@@ -57,38 +59,73 @@ export const Filters = () => {
     );
   };
 
+  function loadFilters(data: { [x: string]: any; }) {
+    // set defaults or load from arg
+    const setData = {
+      min_sa: data["min_sa"] ?? 0,
+      max_sa: data["max_sa"] ?? 99,
+      min_drivers: data["min_cd"] ?? 0,
+      max_drivers: data["max_cd"] ?? 99,
+      min_tm: data["min_tm"] ?? 0,
+      max_tm: data["max_tm"] ?? 3,
+      showEmpty: data["showEmpty"] ?? false ? true : false,
+      showFull: data["showFull"] ?? true ? true : false,
+      class: data["class"] ?? ["mixed", "gt3", "gt4", "gtc", "tcx", "gt2"],
+      dlc: data["dlc"] ?? [
+        "base",
+        "icgt",
+        "gtwc",
+        "bgt",
+        "atp",
+        "gt2",
+        "nurb-24",
+      ],
+      track: data["track"] ?? Object.keys(staticData.tracks),
+      sessions: data["session"] ?? ["race", "qualifying", "practice"],
+      favouritesOnly: data["favouritesOnly"] ?? false ? true : false,
+    };
+    setFilterData(setData);
+  }
+
   useEffect(() => {
     if (filterData) {
       localStorage.setItem("filters", JSON.stringify(filterData));
       ctx.refetch(filterData);
     } else {
-      // set defaults or load from localStorage
       const data = JSON.parse(localStorage.getItem("filters") ?? "{}");
-      const setData = {
-        min_sa: data["min_sa"] ?? 0,
-        max_sa: data["max_sa"] ?? 99,
-        min_drivers: data["min_cd"] ?? 0,
-        max_drivers: data["max_cd"] ?? 99,
-        min_tm: data["min_tm"] ?? 0,
-        max_tm: data["max_tm"] ?? 3,
-        showEmpty: data["showEmpty"] ?? false ? true : false,
-        showFull: data["showFull"] ?? true ? true : false,
-        class: data["class"] ?? ["mixed", "gt3", "gt4", "gtc", "tcx", "gt2"],
-        dlc: data["dlc"] ?? [
-          "base",
-          "icgt",
-          "gtwc",
-          "bgt",
-          "atp",
-          "gt2",
-          "nurb-24",
-        ],
-        sessions: data["session"] ?? ["race", "qualifying", "practice"],
-        favouritesOnly: data["favouritesOnly"] ?? false ? true : false,
-      };
-      setFilterData(setData);
+      loadFilters(data);
     }
   }, [filterData]);
+
+  const selectAllTracks = () => {
+    loadFilters({ track: Object.keys(staticData.tracks) })
+  }
+
+  const selectNoneTracks = () => {
+    loadFilters({ track: [] })
+  }
+
+  const trackFilters = [
+    <span key="track.title" className={styles.filter_group_name}>Tracks
+      <span key="track.all" className={styles.filter_button} onClick={selectAllTracks}>ALL</span>
+      <span key="track.none" className={styles.filter_button} onClick={selectNoneTracks}>NONE</span>
+    </span>,
+    ...Object.keys(staticData.tracks).map(id => {
+      const track = {id,...staticData.tracks[id]};
+            return (
+                <div key={"track." + track.id} className={styles.filter}>
+                <label htmlFor={track.id}>{track.name}</label>
+                <input
+                    name="track"
+                    id={track.id}
+                    type="checkbox"
+                    value={track.id}
+                    defaultChecked={filterData?.track?.includes(track.id) ?? true}
+                />
+              </div>
+            );
+          })
+      ];
 
   return (
     <form className={styles.filters} onSubmit={updateServers}>
@@ -265,6 +302,11 @@ export const Filters = () => {
             />
           </div>
         </div>
+
+        <div className={styles.filter_group}>
+          {trackFilters}
+        </div>
+
         <div className={styles.filter_group}>
           <span className={styles.filter_group_name}>Class</span>
           <div className={styles.filter}>
