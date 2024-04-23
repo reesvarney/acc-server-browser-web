@@ -40,4 +40,13 @@ npm run dev
 ```
 
 ### Deployment
-As this is  a Next.js app, one of the easiest ways to deploy is by using [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) although it should be compatible with most serverless providers. You can then just provide it the same environment variables used for development and it should work (although the Mongo Atlas integration is natively supported on Vercel).
+
+#### Cloud
+As this is a Next.js app, one of the easiest ways to deploy is by using [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) although it should be compatible with most serverless providers. You can then just provide it the same environment variables used for development and it should work (although the Mongo Atlas integration is natively supported on Vercel).
+
+#### Local/Self-hosted
+Set the `QUERYSTRING` and `AUTHSTRING` env variables in your `.env` file. Run:
+
+```
+docker compose up
+```
